@@ -100,8 +100,5 @@ public class Student extends User {
             return false;
         return true;
     }
-
-   
-
     
 }
