@@ -1,0 +1,5 @@
+# Database configuration
+# The variables below should be replaced with the actual values, this is just a template file
+db.url=${DB_URL}
+db.username=${DB_USERNAME}
+db.password=${DB_PASSWORD}

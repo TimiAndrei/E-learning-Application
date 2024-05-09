@@ -1,0 +1,25 @@
+package com.timi.model;
+
+public enum Category {
+    JAVA,
+    PYTHON,
+    JAVASCRIPT,
+    C,
+    CPLUSPLUS,
+    CSHARP,
+    RUBY,
+    SWIFT,
+    KOTLIN,
+    PHP,
+    HTML,
+    CSS,
+    SQL,
+    NO_SQL,
+    REACT,
+    ANGULAR,
+    VUE,
+    NODE_JS,
+    DJANGO,
+    SPRING,
+    FLASK,
+}
