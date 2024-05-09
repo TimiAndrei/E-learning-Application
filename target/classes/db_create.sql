@@ -82,5 +82,18 @@ CREATE TABLE IF NOT EXISTS QuizAttemptQuestions (
     FOREIGN KEY (questionId) REFERENCES questions(questionId)
 );
 
+CREATE TABLE IF NOT EXISTS Applications (
+    applicationId INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT NOT NULL,
+    courseId INT NOT NULL,
+    applicationLetter TEXT NOT NULL,
+    status ENUM('PENDING', 'APPROVED', 'REJECTED'),
+    applicationDate TIMESTAMP NOT NULL,
+    approvalDate TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id),
+    FOREIGN KEY (courseId) REFERENCES courses(courseId)
+);
+
+
 COMMIT;
 
