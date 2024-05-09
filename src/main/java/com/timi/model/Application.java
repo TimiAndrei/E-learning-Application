@@ -9,29 +9,26 @@ public class Application {
     private String applicationLetter;
     private String status;
     private Date applicationDate;
-    private Date approvalDate;
 
     public Application() {
     }
 
-    public Application(int applicationId, int userId, int courseId, String applicationLetter, String status, Date applicationDate, Date approvalDate) {
+    public Application(int applicationId, int userId, int courseId, String applicationLetter, String status, Date applicationDate) {
         this.applicationId = applicationId;
         this.userId = userId;
         this.courseId = courseId;
         this.applicationLetter = applicationLetter;
         this.status = status;
         this.applicationDate = applicationDate;
-        this.approvalDate = approvalDate;
     }
 
     // constructor without applicationId
-    public Application(int userId, int courseId, String applicationLetter, String status, Date applicationDate, Date approvalDate) {
+    public Application(int userId, int courseId, String applicationLetter, String status, Date applicationDate) {
         this.userId = userId;
         this.courseId = courseId;
         this.applicationLetter = applicationLetter;
         this.status = status;
         this.applicationDate = applicationDate;
-        this.approvalDate = approvalDate;
     }
 
     public int getApplicationId() {
@@ -82,19 +79,11 @@ public class Application {
         this.applicationDate = applicationDate;
     }
 
-    public Date getApprovalDate() {
-        return approvalDate;
-    }
-
-    public void setApprovalDate(Date approvalDate) {
-        this.approvalDate = approvalDate;
-    }
-
     @Override
     public String toString() {
         return "Application [applicationId=" + applicationId + ", userId=" + userId + ", courseId=" + courseId
                 + ", applicationLetter=" + applicationLetter + ", status=" + status + ", applicationDate="
-                + applicationDate + ", approvalDate=" + approvalDate + "]";
+                + applicationDate + "]";
     }
 
     @Override
@@ -107,7 +96,6 @@ public class Application {
         result = prime * result + ((applicationLetter == null) ? 0 : applicationLetter.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
         result = prime * result + ((applicationDate == null) ? 0 : applicationDate.hashCode());
-        result = prime * result + ((approvalDate == null) ? 0 : approvalDate.hashCode());
         return result;
     }
 
@@ -140,11 +128,6 @@ public class Application {
             if (other.applicationDate != null)
                 return false;
         } else if (!applicationDate.equals(other.applicationDate))
-            return false;
-        if (approvalDate == null) {
-            if (other.approvalDate != null)
-                return false;
-        } else if (!approvalDate.equals(other.approvalDate))
             return false;
         return true;
     }
