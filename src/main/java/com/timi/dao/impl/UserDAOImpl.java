@@ -36,20 +36,28 @@ public class UserDAOImpl implements UserDAO {
                 throw new EmailAlreadyExistsException("\nEmail already exists: " + user.getEmail());
             }
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Users (email, username, password, role, level, points, department, dateOfEmployment, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getUsername());
-            ps.setString(3, user.getPassword());
-            ps.setString(4, user.getRole().toString());
+            // check if user has id, if it has id, we should add the id in the query as well
+            PreparedStatement ps = null;
+            if (user.getId() != 0) {
+                ps = connection.prepareStatement("INSERT INTO Users (id, email, username, password, role, level, points, department, dateOfEmployment, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                ps.setInt(1, user.getId());
+            } else {
+                ps = connection.prepareStatement("INSERT INTO Users (email, username, password, role, level, points, department, dateOfEmployment, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            }
+            int cnt = (user.getId() != 0) ? 1 : 0;
+            ps.setString(1 + cnt, user.getEmail());
+            ps.setString(2 + cnt, user.getUsername());
+            ps.setString(3 + cnt, user.getPassword());
+            ps.setString(4 + cnt, user.getRole().toString());
 
             // Set parameters based on user role
             if (user instanceof Student) {
                 Student student = (Student) user;
-                ps.setString(5, student.getLevel().toString());
-                ps.setInt(6, student.getPoints());
-                ps.setNull(7, Types.VARCHAR);  // department
-                ps.setNull(8, Types.DATE);     // dateOfEmplyment
-                ps.setNull(9, Types.VARCHAR); // telephone
+                ps.setString(5 + cnt, student.getLevel().toString());
+                ps.setInt(6 + cnt, student.getPoints());
+                ps.setNull(7 + cnt, Types.VARCHAR);  // department
+                ps.setNull(8 + cnt, Types.DATE);     // dateOfEmplyment
+                ps.setNull(9 + cnt, Types.VARCHAR); // telephone
                 if(!student.validateEmail(student.getEmail()))
                 {
                     System.out.println("Email is not valid!");
@@ -57,11 +65,11 @@ public class UserDAOImpl implements UserDAO {
                 }
             } else if (user instanceof Instructor) {
                 Instructor instructor = (Instructor) user;
-                ps.setNull(5, Types.VARCHAR);  // level
-                ps.setNull(6, Types.INTEGER);  // points
-                ps.setString(7, instructor.getDepartment());
-                ps.setDate(8, new java.sql.Date(instructor.getDateOfEmployment().getTime()));
-                ps.setNull(9, Types.VARCHAR); // telephone
+                ps.setNull(5 + cnt, Types.VARCHAR);  // level
+                ps.setNull(6 + cnt, Types.INTEGER);  // points
+                ps.setString(7 + cnt, instructor.getDepartment());
+                ps.setDate(8 + cnt, new java.sql.Date(instructor.getDateOfEmployment().getTime()));
+                ps.setNull(9 + cnt, Types.VARCHAR); // telephone
                 if(!instructor.validateEmail(instructor.getEmail()))
                 {
                     System.out.println("Email is not valid for an instructor!");
@@ -69,11 +77,11 @@ public class UserDAOImpl implements UserDAO {
                 }
             } else if (user instanceof Admin) {
                 Admin admin = (Admin) user;
-                ps.setNull(5, Types.VARCHAR);  // level
-                ps.setNull(6, Types.INTEGER);  // points
-                ps.setNull(7, Types.VARCHAR);  // department
-                ps.setNull(8, Types.DATE);     // dateOfEmplyment
-                ps.setString(9, admin.getTelephone());
+                ps.setNull(5 + cnt, Types.VARCHAR);  // level
+                ps.setNull(6 + cnt, Types.INTEGER);  // points
+                ps.setNull(7 + cnt, Types.VARCHAR);  // department
+                ps.setNull(8 + cnt, Types.DATE);     // dateOfEmplyment
+                ps.setString(9 + cnt, admin.getTelephone());
                 if(!admin.validateEmail(admin.getEmail()))
                 {
                     System.out.println("Email is not valid for an admin!");
@@ -106,42 +114,42 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserById(int userId) {
-    Connection connection = dbConnection.getConnection();
-    User user = null;
-    try {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE id = ?");
-        preparedStatement.setInt(1, userId);
-        
-        ResultSet resultSet = preparedStatement.executeQuery();
-        
-        if (resultSet.next()) {
-            String email = resultSet.getString("email");
-            String username = resultSet.getString("username");
-            String password = resultSet.getString("password");
-            String role = resultSet.getString("role");
-            
-            // Create user object (Student, Instructor, Admin) based on role
-            if (role.equals("STUDENT")) {
-                String level = resultSet.getString("level");
-                int points = resultSet.getInt("points");
-                user = new Student(userId, email, username, password, Level.valueOf(level), points);
-            } else if (role.equals("INSTRUCTOR")) {
-                String department = resultSet.getString("department");
-                Date dateOfEmployment = resultSet.getDate("dateOfEmployment");
-                user = new Instructor(userId, email, username, password, dateOfEmployment, department);
-            } else if (role.equals("ADMIN")) {
-                String telephone = resultSet.getString("telephone");
-                user = new Admin(userId, email, username, password, telephone);
+   public User getUserById(int userId) {
+        Connection connection = dbConnection.getConnection();
+        User user = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE id = ?");
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String email = resultSet.getString("email");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String role = resultSet.getString("role");
+
+                // Create user object (Student, Instructor, Admin) based on role
+                if (role.equals("STUDENT")) {
+                    int points = resultSet.getInt("points");
+                    String level = resultSet.getString("level");
+                    user = new Student(userId, email, username, password, Level.valueOf(level), points);
+                } else if (role.equals("INSTRUCTOR")) {
+                    String department = resultSet.getString("department");
+                    Date dateOfEmployment = resultSet.getDate("dateOfEmployment");
+                    user = new Instructor(userId, email, username, password, dateOfEmployment, department);
+                } else if (role.equals("ADMIN")) {
+                    String telephone = resultSet.getString("telephone");
+                    user = new Admin(userId, email, username, password, telephone);
+                }
             }
+
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        
-        resultSet.close();
-        preparedStatement.close();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return user;
+        return user;
     }
 
     @Override
@@ -188,14 +196,59 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user) throws InvalidEmailException {
         Connection connection = dbConnection.getConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Users SET email = ?, username = ?, password = ? WHERE id = ?");
+            if (emailExists(user.getEmail())) {
+                System.out.println("Failed to update user!");
+                throw new EmailAlreadyExistsException("\nEmail already exists: " + user.getEmail());
+            }
+
+            PreparedStatement ps = connection.prepareStatement("UPDATE Users SET email = ?, username = ?, password = ?, role = ?, level = ?, points = ?, department = ?, dateOfEmployment = ?, telephone = ? WHERE id = ?");
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getUsername());
             ps.setString(3, user.getPassword());
-            ps.setInt(4, user.getId());
+            ps.setString(4, user.getRole().toString());
+
+            // Set parameters based on user role
+            if (user instanceof Student) {
+                Student student = (Student) user;
+                ps.setString(5, student.getLevel().toString());
+                ps.setInt(6, student.getPoints());
+                ps.setNull(7, Types.VARCHAR);  // department
+                ps.setNull(8, Types.DATE);     // dateOfEmplyment
+                ps.setNull(9, Types.VARCHAR); // telephone
+                if(!student.validateEmail(student.getEmail()))
+                {
+                    System.out.println("Email is not valid!");
+                    throw new InvalidEmailException("Email is not valid: " + student.getEmail());
+                }
+            } else if (user instanceof Instructor) {
+                Instructor instructor = (Instructor) user;
+                ps.setNull(5, Types.VARCHAR);  // level
+                ps.setNull(6, Types.INTEGER);  // points
+                ps.setString(7, instructor.getDepartment());
+                ps.setDate(8, new java.sql.Date(instructor.getDateOfEmployment().getTime()));
+                ps.setNull(9, Types.VARCHAR); // telephone
+                if(!instructor.validateEmail(instructor.getEmail()))
+                {
+                    System.out.println("Email is not valid for an instructor!");
+                    throw new InvalidEmailException("Email is not valid for an instructor: " + instructor.getEmail() +"\nIt should be under @unibuc.ro domain!");
+                }
+            } else if (user instanceof Admin) {
+                Admin admin = (Admin) user;
+                ps.setNull(5, Types.VARCHAR);  // level
+                ps.setNull(6, Types.INTEGER);  // points
+                ps.setNull(7, Types.VARCHAR);  // department
+                ps.setNull(8, Types.DATE);     // dateOfEmplyment
+                ps.setString(9, admin.getTelephone());
+                if(!admin.validateEmail(admin.getEmail()))
+                {
+                    System.out.println("Email is not valid for an admin!");
+                    throw new InvalidEmailException("Email is not valid for an admin: " + admin.getEmail());
+                }
+            }
+            ps.setInt(10, user.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
