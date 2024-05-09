@@ -21,12 +21,20 @@ public class ApplicationDAOImpl implements ApplicationDAO {
     public void addApplication(Application application) throws DAOException {
         Connection connection = dbConnection.getConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Applications (userId, courseId, applicationLetter, status, applicationDate) VALUES (?, ?, ?, ?, ?)");
-            ps.setInt(1, application.getUserId());
-            ps.setInt(2, application.getCourseId());
-            ps.setString(3, application.getApplicationLetter());
-            ps.setString(4, application.getStatus());
-            ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            PreparedStatement ps = null;
+            if (application.getApplicationId() == 0) {
+                ps = connection.prepareStatement("INSERT INTO Applications (userId, courseId, applicationLetter, status, applicationDate) VALUES (?, ?, ?, ?, ?)");
+            } else {
+                ps = connection.prepareStatement("INSERT INTO Applications (applicationId, userId, courseId, applicationLetter, status, applicationDate) VALUES (?, ?, ?, ?, ?, ?)");
+                ps.setInt(1, application.getApplicationId());
+            }
+
+            int cnt = (application.getApplicationId() != 0) ? 1 : 0;
+            ps.setInt(1 + cnt, application.getUserId());
+            ps.setInt(2 + cnt, application.getCourseId());
+            ps.setString(3 + cnt, application.getApplicationLetter());
+            ps.setString(4 + cnt, application.getStatus());
+            ps.setTimestamp(5 + cnt, new Timestamp(System.currentTimeMillis()));
             ps.executeUpdate();
             ps.close();
             connection.close();
