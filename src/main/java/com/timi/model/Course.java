@@ -6,8 +6,8 @@ public class Course {
     private int courseId;
     private String title;
     private String description;
-    private String instructor;
-    private String level;
+    private int instructorId;
+    private Level level;
     private Double price;
     private int duration;
     private List<Category> categories;
@@ -17,11 +17,11 @@ public class Course {
     public Course() {
     }
 
-    public Course(int courseId, String title, String description, String instructor, String level, Double price, int duration, List<Category> categories, List<Quiz> quizzes) {
+    public Course(int courseId, String title, String description, int instructorId, Level level, Double price, int duration, List<Category> categories, List<Quiz> quizzes) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
-        this.instructor = instructor;
+        this.instructorId = instructorId;
         this.level = level;
         this.price = price;
         this.duration = duration;
@@ -30,10 +30,10 @@ public class Course {
     }
 
     // constructor without courseId
-    public Course(String title, String description, String instructor, String level, Double price, int duration, List<Category> categories, List<Quiz> quizzes) {
+    public Course(String title, String description, int instructorId, Level level, Double price, int duration, List<Category> categories, List<Quiz> quizzes) {
         this.title = title;
         this.description = description;
-        this.instructor = instructor;
+        this.instructorId = instructorId;
         this.level = level;
         this.price = price;
         this.duration = duration;
@@ -58,11 +58,11 @@ public class Course {
         this.quizzes = quizzes;
     }
 
-    public String getLevel() {
+    public Level getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Level level) {
         this.level = level;
     }
 
@@ -78,12 +78,12 @@ public class Course {
         return title;
     }
 
-    public String getInstructor() {
-        return instructor;
+    public int getInstructorId() {
+        return instructorId;
     }
 
-    public void setInstructor(String instructor) {
-        this.instructor = instructor;
+    public void setInstructor(int instructorId) {
+        this.instructorId = instructorId;
     }
 
     public Double getPrice() {
@@ -117,7 +117,7 @@ public class Course {
     @Override
     public String toString() {
         return "Course [courseId=" + courseId + ", title=" + title + ", description=" + description + ", instructor="
-                + instructor + ", price=" + price + ", duration=" + duration + ", categories=" + categories + "]";
+                + instructorId + ", price=" + price + ", duration=" + duration + ", categories=" + categories + "]";
     }
 
     @Override
@@ -127,7 +127,8 @@ public class Course {
         result = prime * result + courseId;
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((instructor == null) ? 0 : instructor.hashCode());
+        result = prime * result + instructorId;
+        result = prime * result + ((level == null) ? 0 : level.hashCode());
         result = prime * result + ((price == null) ? 0 : price.hashCode());
         result = prime * result + duration;
         result = prime * result + ((categories == null) ? 0 : categories.hashCode());
@@ -156,10 +157,9 @@ public class Course {
                 return false;
         } else if (!description.equals(other.description))
             return false;
-        if (instructor == null) {
-            if (other.instructor != null)
-                return false;
-        } else if (!instructor.equals(other.instructor))
+        if (instructorId != other.instructorId)
+            return false;
+        if (level != other.level)
             return false;
         if (price == null) {
             if (other.price != null)
@@ -182,5 +182,4 @@ public class Course {
     }
 
     
-
 }
