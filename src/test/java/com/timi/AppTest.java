@@ -1,20 +1,13 @@
 package com.timi;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import org.junit.Test;
-
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
-    }
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+    ApplicationDAOImplTest.class,
+    // Add other test classes here if needed
+})
+public class AppTest {
+    // This class doesn't need any additional methods or content
 }
