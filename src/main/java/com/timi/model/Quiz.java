@@ -28,6 +28,21 @@ public class Quiz {
         this.duration = duration;
     }
 
+    // constructor without questions
+    public Quiz(int quizId, String title, int courseId, float duration) {
+        this.quizId = quizId;
+        this.title = title;
+        this.courseId = courseId;
+        this.duration = duration;
+    }
+
+    // constructor without quizId and questions
+    public Quiz(String title, int courseId, float duration) {
+        this.title = title;
+        this.courseId = courseId;
+        this.duration = duration;
+    }
+
     public int getQuizId() {
         return quizId;
     }
