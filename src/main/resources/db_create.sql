@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Users, Courses, Course_categories, Questions, Quizzes, Quiz_questions, User_courses, QuizAttempts, QuizAttemptQuestions;
+DROP TABLE IF EXISTS Applications, Users, Courses, Course_categories, Questions, Quizzes, Quiz_questions, User_courses, QuizAttempts, QuizAttemptQuestions;
 
 CREATE TABLE IF NOT EXISTS Users (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -93,6 +93,8 @@ CREATE TABLE IF NOT EXISTS Applications (
     FOREIGN KEY (userId) REFERENCES users(id),
     FOREIGN KEY (courseId) REFERENCES courses(courseId)
 );
+
+INSERT INTO Users (email, username, password, role) VALUES ('admin@test.com', 'admin', 'admin', 'ADMIN');
 
 
 COMMIT;
