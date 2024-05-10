@@ -145,4 +145,23 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             throw new DAOException("Error deleting application", e);
         }
     }
+
+    @Override
+    public Queue<Application> getPendingApplications() throws DAOException {
+        Queue<Application> applications = new LinkedList<>();
+        Connection connection = dbConnection.getConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Applications WHERE status = 'PENDING'");
+            while (rs.next()) {
+                Application application = extractApplicationFromResultSet(rs);
+                applications.offer(application);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Error fetching pending applications", e);
+        }
+        return applications;
+    }
 }
