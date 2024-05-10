@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS Questions (
     questionId INT PRIMARY KEY AUTO_INCREMENT,
     content VARCHAR(255) NOT NULL,
     options TEXT NOT NULL, -- will be stored as JSON
-    correctOptionIndex INT NOT NULL
+    correctOptionIndex INT NOT NULL,
+    selectedOptionIndex INT -- for quiz attempts
 );
 
 CREATE TABLE IF NOT EXISTS Quizzes (
