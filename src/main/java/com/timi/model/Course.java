@@ -10,14 +10,14 @@ public class Course {
     private Level level;
     private Double price;
     private int duration;
-    private List<Category> categories;
+    private Category category;
     private List<Quiz> quizzes;
 
 
     public Course() {
     }
 
-    public Course(int courseId, String title, String description, int instructorId, Level level, Double price, int duration, List<Category> categories, List<Quiz> quizzes) {
+    public Course(int courseId, String title, String description, int instructorId, Level level, Double price, int duration, Category category, List<Quiz> quizzes) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -25,29 +25,29 @@ public class Course {
         this.level = level;
         this.price = price;
         this.duration = duration;
-        this.categories = categories;
+        this.category = category;
         this.quizzes = quizzes;
     }
 
     // constructor without courseId
-    public Course(String title, String description, int instructorId, Level level, Double price, int duration, List<Category> categories, List<Quiz> quizzes) {
+    public Course(String title, String description, int instructorId, Level level, Double price, int duration, Category category, List<Quiz> quizzes) {
         this.title = title;
         this.description = description;
         this.instructorId = instructorId;
         this.level = level;
         this.price = price;
         this.duration = duration;
-        this.categories = categories;
+        this.category = category;
         this.quizzes = quizzes;
     }
 
 
-    public List<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public List<Quiz> getQuizzes() {
@@ -117,7 +117,7 @@ public class Course {
     @Override
     public String toString() {
         return "Course [courseId=" + courseId + ", title=" + title + ", description=" + description + ", instructor="
-                + instructorId + ", price=" + price + ", duration=" + duration + ", categories=" + categories + "]";
+                + instructorId + ", price=" + price + ", duration=" + duration + ", category=" + category + "]";
     }
 
     @Override
@@ -131,7 +131,7 @@ public class Course {
         result = prime * result + ((level == null) ? 0 : level.hashCode());
         result = prime * result + ((price == null) ? 0 : price.hashCode());
         result = prime * result + duration;
-        result = prime * result + ((categories == null) ? 0 : categories.hashCode());
+        result = prime * result + ((category == null) ? 0 : category.hashCode());
         result = prime * result + ((quizzes == null) ? 0 : quizzes.hashCode());
         return result;
     }
@@ -168,10 +168,10 @@ public class Course {
             return false;
         if (duration != other.duration)
             return false;
-        if (categories == null) {
-            if (other.categories != null)
+        if (category == null) {
+            if (other.category != null)
                 return false;
-        } else if (!categories.equals(other.categories))
+        } else if (!category.equals(other.category))
             return false;
         if (quizzes == null) {
             if (other.quizzes != null)

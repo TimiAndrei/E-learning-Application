@@ -18,6 +18,8 @@ public interface CourseDAO {
 
     List<Course> getCoursesByCategory(String category) throws DAOException;
 
+    List<Course> getUserCourses(int userId) throws DAOException;
+
     void updateCourse(Course course) throws DAOException;
 
     void deleteCourse(int courseId) throws DAOException;

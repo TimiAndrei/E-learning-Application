@@ -12,4 +12,5 @@ public interface UserDAO {
     List<User> getAllUsers() throws DAOException;
     void updateUser(User user) throws DAOException, InvalidEmailException;
     void deleteUser(int id) throws DAOException;
+    void addCourseToUser(int userId, int courseId) throws DAOException;
 }

@@ -2,6 +2,7 @@ package com.timi;
 
 import com.timi.dao.CourseDAO;
 import com.timi.dao.impl.CourseDAOImpl;
+import com.timi.model.Category;
 import com.timi.model.Course;
 import com.timi.model.Level;
 
@@ -25,7 +26,7 @@ public class CourseDAOImplTest {
     @Test
     @DisplayName("Add Course Test")
     void addCourseTest() {
-        Course course = new Course("Java Programming", "Learn Java Programming", 3, Level.BEGINNER, 100.0, 10, null, null);
+        Course course = new Course("Java Programming", "Learn Java Programming", 3, Level.BEGINNER, 100.0, 10, Category.JAVA, null);
         assertDoesNotThrow(() -> courseDAO.addCourse(course));
     }
 

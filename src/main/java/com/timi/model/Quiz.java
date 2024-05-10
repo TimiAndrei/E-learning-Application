@@ -85,8 +85,8 @@ public class Quiz {
 
     @Override
     public String toString() {
-        return "Quiz \n [quizId=" + quizId + "\n, title=" + title + "\n, questions=" + questions + "\n, courseId=" + courseId
-                + "\n, duration=" + duration + "]";
+        return "Quiz \n[quizId=" + quizId + "\ntitle=" + title + "\nquestions=\n" + questions + "\ncourseId=" + courseId
+                + "\nduration=" + duration + "]";
     }
 
     @Override

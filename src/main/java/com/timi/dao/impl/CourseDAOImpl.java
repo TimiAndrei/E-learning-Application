@@ -7,6 +7,7 @@ import java.util.List;
 import com.timi.dao.CourseDAO;
 import com.timi.dao.DatabaseConnection;
 import com.timi.exception.DAOException;
+import com.timi.model.Category;
 import com.timi.model.Course;
 import com.timi.model.Level;
 
@@ -25,9 +26,9 @@ public class CourseDAOImpl implements CourseDAO{
         try {
             PreparedStatement ps = null;
             if (course.getCourseId() == 0) {
-                ps = connection.prepareStatement("INSERT INTO Courses (title, description, instructor, level, price, duration) VALUES (?, ?, ?, ?, ?, ?)");
+                ps = connection.prepareStatement("INSERT INTO Courses (title, description, instructor, level, price, duration, category) VALUES (?, ?, ?, ?, ?, ?, ?)");
             } else {
-                ps = connection.prepareStatement("INSERT INTO Courses (courseId, title, description, instructor, level, price, duration) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                ps = connection.prepareStatement("INSERT INTO Courses (courseId, title, description, instructor, level, price, duration, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 ps.setInt(1, course.getCourseId());
             }
 
@@ -38,6 +39,7 @@ public class CourseDAOImpl implements CourseDAO{
             ps.setString(4 + cnt, course.getLevel().toString());
             ps.setDouble(5 + cnt, course.getPrice());
             ps.setInt(6 + cnt, course.getDuration());
+            ps.setString(7 + cnt, course.getCategory().toString());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -54,8 +56,11 @@ public class CourseDAOImpl implements CourseDAO{
         course.setPrice(rs.getDouble("price"));
         course.setDuration(rs.getInt("duration"));
         String levelString = rs.getString("level");
+        String categoryString = rs.getString("category");
         Level level = Level.valueOf(levelString);
+        Category category = Category.valueOf(categoryString);
         course.setLevel(level);
+        course.setCategory(category);
         return course;
     }
 
@@ -97,6 +102,28 @@ public class CourseDAOImpl implements CourseDAO{
         }
         return courses;
     }
+
+    @Override
+    public List<Course> getUserCourses(int userId) throws DAOException {
+
+        Connection connection = dbConnection.getConnection();
+        List<Course> courses = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Courses WHERE courseId IN (SELECT courseId FROM UserCourses WHERE userId = ?)");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Course course = extractCourseFromResultSet(rs);
+                courses.add(course);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            throw new DAOException("Error fetching user courses", e);
+        }
+        return courses;
+    }
+
 
     @Override
     public List<Course> getCoursesByInstructor(String instructor) throws DAOException {
@@ -146,7 +173,7 @@ public class CourseDAOImpl implements CourseDAO{
         Connection connection = dbConnection.getConnection();
         List<Course> courses = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Courses WHERE courseId IN (SELECT courseId FROM Course_categories WHERE category = ?)");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Courses WHERE category = ?");
             ps.setString(1, category);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -166,7 +193,7 @@ public class CourseDAOImpl implements CourseDAO{
 
         Connection connection = dbConnection.getConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Courses SET title = ?, description = ?, instructor = ?, level = ?, price = ?, duration = ? WHERE courseId = ?");
+            PreparedStatement ps = connection.prepareStatement("UPDATE Courses SET title = ?, description = ?, instructor = ?, level = ?, price = ?, duration = ?, category = ? WHERE courseId = ?");
             ps.setString(1, course.getTitle());
             ps.setString(2, course.getDescription());
             ps.setInt(3, course.getInstructorId());
@@ -174,6 +201,7 @@ public class CourseDAOImpl implements CourseDAO{
             ps.setDouble(5, course.getPrice());
             ps.setInt(6, course.getDuration());
             ps.setInt(7, course.getCourseId());
+            ps.setString(8, course.getCategory().toString());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {

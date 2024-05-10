@@ -96,8 +96,8 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question [questionId=" + questionId + ", content=" + content + ", options=" + options
-                + ", correctOptionIndex=" + correctOptionIndex  + ", selectedOptionIndex=" + selectedOptionIndex +"quizId=" + quizId +"]";
+        return "Question [questionId=" + questionId + "\ncontent=" + content + "\noptions=" + options
+                + "\ncorrectOptionIndex=" + correctOptionIndex  + "\nselectedOptionIndex=" + selectedOptionIndex + "\nquizId=" + quizId +"]";
     }
 
     @Override

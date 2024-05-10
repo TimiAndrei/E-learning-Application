@@ -1,12 +1,17 @@
 package com.timi.dao.impl;
 
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import com.timi.dao.DatabaseConnection;
 import com.timi.dao.QuizAttemptDAO;
 import com.timi.exception.DAOException;
@@ -89,7 +94,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
     public List<QuizAttempt> getAllQuizAttempts() throws DAOException {
         Connection connection = dbConnection.getConnection();
         List<QuizAttempt> quizAttempts = new ArrayList<>();
-
+    
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM QuizAttempts");
             ResultSet rs = ps.executeQuery();
@@ -101,6 +106,11 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
                 quizAttempt.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
                 quizAttempt.setScore(rs.getInt("score"));
                 quizAttempt.setDurationAttempted(rs.getFloat("durationAttempted"));
+                
+                // Fetch questions attempted for this quiz attempt
+                List<Question> questionsAttempted = getQuestionsByAttemptId(quizAttempt.getAttemptId());
+                quizAttempt.setQuestionsAttempted(questionsAttempted);
+                
                 quizAttempts.add(quizAttempt);
             }
             rs.close();
@@ -108,9 +118,51 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
         } catch (SQLException e) {
             throw new DAOException("Error getting all quiz attempts", e);
         }
-
+    
         return quizAttempts;
     }
+
+    @Override
+    public List<Question> getQuestionsByAttemptId(int attemptId) throws DAOException {
+        Connection connection = dbConnection.getConnection();
+        List<Question> questions = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM QuizAttemptQuestions WHERE attemptId = ?");
+            ps.setInt(1, attemptId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int questionId = rs.getInt("questionId");
+                QuestionDAOImpl questionDAO = new QuestionDAOImpl();
+                Question question = questionDAO.getQuestionById(questionId);
+                question.setSelectedOptionIndex(rs.getInt("selectedOptionIndex"));
+                
+                // get the other information of the question from the Questions table
+                PreparedStatement psQuestion = connection.prepareStatement("SELECT * FROM Questions WHERE questionId = ?");
+                psQuestion.setInt(1, questionId);
+                ResultSet rsQuestion = psQuestion.executeQuery();
+                if (rsQuestion.next()) {
+                    question.setContent(rsQuestion.getString("content"));
+                    String optionsJson = rsQuestion.getString("options");
+                    Type listType = new TypeToken<List<String>>(){}.getType();
+                    List<String> options = new Gson().fromJson(optionsJson, listType);
+                    question.setOptions(options);
+                    question.setCorrectOptionIndex(rsQuestion.getInt("correctOptionIndex"));
+                    question.setQuizId(rsQuestion.getInt("quizId"));
+                }
+                rsQuestion.close();
+                psQuestion.close();
+                questions.add(question);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            throw new DAOException("Error getting questions by attempt ID", e);
+        }
+
+        return questions;
+    }
+
 
     @Override
     public List<QuizAttempt> getQuizAttemptsByUserId(int userId) throws DAOException {

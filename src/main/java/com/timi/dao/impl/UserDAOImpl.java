@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.timi.dao.CourseDAO;
 import com.timi.dao.DatabaseConnection;
 import com.timi.dao.UserDAO;
+import com.timi.exception.DAOException;
 import com.timi.exception.EmailAlreadyExistsException;
 import com.timi.exception.InvalidEmailException;
 import com.timi.model.Admin;
+import com.timi.model.Course;
 import com.timi.model.Instructor;
 import com.timi.model.Level;
 import com.timi.model.Student;
@@ -21,9 +24,11 @@ import com.timi.model.User;
 
 public class UserDAOImpl implements UserDAO {
     private DatabaseConnection dbConnection;
+    private CourseDAO courseDAO;
 
     public UserDAOImpl() {
         dbConnection = DatabaseConnection.getInstance();
+        courseDAO = new CourseDAOImpl();
     }
 
     @Override
@@ -152,48 +157,51 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    @Override
-    public List<User> getAllUsers() {
+   @Override
+public List<User> getAllUsers() throws DAOException {
+    Connection connection = dbConnection.getConnection();
+    List<User> users = new ArrayList<>();
 
-        Connection connection = dbConnection.getConnection();
-        List<User> users = new ArrayList<>();
+    try {
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users");
+        ResultSet resultSet = preparedStatement.executeQuery();
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users");
-            ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            int userId = resultSet.getInt("id");
+            String email = resultSet.getString("email");
+            String username = resultSet.getString("username");
+            String password = resultSet.getString("password");
+            String role = resultSet.getString("role");
 
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("id");
-                String email = resultSet.getString("email");
-                String username = resultSet.getString("username");
-                String password = resultSet.getString("password");
-                String role = resultSet.getString("role");
-
-                // Create user object (Student, Instructor, Admin) based on role
-                if (role.equals("STUDENT")) {
-                    int points = resultSet.getInt("points");
-                    String level = resultSet.getString("level");
-                    users.add(new Student(userId, email, username, password, Level.valueOf(level), points));
-                } else if (role.equals("INSTRUCTOR")) {
-                    String department = resultSet.getString("department");
-                    Date dateOfEmployment = resultSet.getDate("dateOfEmployment");
-                    users.add(new Instructor(userId, email, username, password, dateOfEmployment, department));
-                } else if (role.equals("ADMIN")) {
-                    String telephone = resultSet.getString("telephone");
-                    users.add(new Admin(userId, email, username, password, telephone));
-                }
+            // Create user object (Student, Instructor, Admin) based on role
+            if (role.equals("STUDENT")) {
+                int points = resultSet.getInt("points");
+                String level = resultSet.getString("level");
+                Student student = new Student(userId, email, username, password, Level.valueOf(level), points);
+                List<Course> enrolledCourses = courseDAO.getUserCourses(userId);
+                student.setEnrolledCourses(enrolledCourses);
+                users.add(student);
+            } else if (role.equals("INSTRUCTOR")) {
+                String department = resultSet.getString("department");
+                Date dateOfEmployment = resultSet.getDate("dateOfEmployment");
+                Instructor instructor = new Instructor(userId, email, username, password, dateOfEmployment, department);
+                List<Course> teachingCourses = courseDAO.getUserCourses(userId); 
+                instructor.setTeachingCourses(teachingCourses);
+                users.add(instructor);
+            } else if (role.equals("ADMIN")) {
+                String telephone = resultSet.getString("telephone");
+                users.add(new Admin(userId, email, username, password, telephone));
             }
-
-            resultSet.close();
-            preparedStatement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-
         }
 
-        return users;
-
+        resultSet.close();
+        preparedStatement.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return users;
+}
 
     @Override
     public void updateUser(User user) throws InvalidEmailException {
@@ -268,6 +276,20 @@ public class UserDAOImpl implements UserDAO {
 
         }
     }
+
+    @Override
+    public void addCourseToUser(int userId, int courseId) {
+        Connection connection = dbConnection.getConnection();
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO UserCourses (userId, courseId) VALUES (?, ?)");
+            ps.setInt(1, userId);
+            ps.setInt(2, courseId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 
