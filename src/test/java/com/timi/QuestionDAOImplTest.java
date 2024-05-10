@@ -9,7 +9,7 @@ import com.timi.dao.QuestionDAO;
 import com.timi.dao.impl.QuestionDAOImpl;
 import com.timi.model.Question;
 
-public class QuestionDAOTest {
+public class QuestionDAOImplTest {
 
     private QuestionDAO questionDAO;
 

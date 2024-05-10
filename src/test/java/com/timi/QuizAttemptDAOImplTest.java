@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-public class QuizAttemptDAOTest {
+public class QuizAttemptDAOImplTest {
     
     private QuizAttemptDAO quizAttemptDAO;
 

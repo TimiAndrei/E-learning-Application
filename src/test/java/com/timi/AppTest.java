@@ -6,8 +6,12 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     ApplicationDAOImplTest.class,
-    // Add other test classes here if needed
+    UserDAOImplTest.class,
+    CourseDAOImplTest.class,
+    QuizDAOImplTest.class,
+    QuestionDAOImplTest.class,
+    QuizAttemptDAOImplTest.class
 })
 public class AppTest {
-    // This class doesn't need any additional methods or content
+    
 }

@@ -10,7 +10,7 @@ import com.timi.dao.impl.QuizDAOImpl;
 import com.timi.model.Question;
 import com.timi.model.Quiz;
 
-public class QuizDAOTest {
+public class QuizDAOImplTest {
 
     private QuizDAO quizDAO;
 
