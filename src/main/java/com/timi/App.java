@@ -1,44 +1,61 @@
 package com.timi;
 
-import com.timi.dao.*;
-import com.timi.dao.impl.*;
+import java.util.List;
+import java.util.Queue;
+
+import com.timi.service.ElearningService;
+import com.timi.service.DataService;
+import com.timi.service.impl.ElearningServiceImpl;
+import com.timi.service.impl.DataServiceImpl;
+import com.timi.exception.DAOException;
+import com.timi.model.*;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
+        ElearningService elearningService = new ElearningServiceImpl();
+        DataService dataService = new DataServiceImpl();
+
         try {
-            System.out.println("Hello World!");
+            dataService.loadDatabase();
+        } catch (DAOException e) {
+            System.out.println("Error loading data from the database: " + e.getMessage());
+        }
 
-            // Fetch all data from the database and print it
+        // Printing all the data from the database 
+        try {
+            dataService.printAllData();
+        } catch (DAOException e) {
+            System.out.println("Error printing data: " + e.getMessage());
+        }
 
-            // Fetch all users
-            UserDAO userDAO = new UserDAOImpl();
-            System.out.println("Users:");
-            userDAO.getAllUsers().forEach(System.out::println);
+        // Specific actions using the Elearning Service like getting all the pending applications
+        try{
+            Queue<Application> pendingApplications = elearningService.getPendingApplications();
+            System.out.println("Pending applications:");
+            for (Application application : pendingApplications) {
+                System.out.println(application);
+            }
+            System.out.println();
+        } catch (DAOException e) {
+            System.out.println("Error getting pending applications: " + e.getMessage());
+        }
 
-            // Fetch all courses
-            CourseDAO courseDAO = new CourseDAOImpl();
-            System.out.println("Courses:");
-            courseDAO.getAllCourses().forEach(System.out::println);
-
-            // Fetch all quizzes
-            QuizDAO quizDAO = new QuizDAOImpl();
-            System.out.println("Quizzes:");
-            quizDAO.getAllQuizzes().forEach(System.out::println);
-
-            // Fetch all questions
-            QuestionDAO questionDAO = new QuestionDAOImpl();
-            System.out.println("Questions:");
-            questionDAO.getAllQuestions().forEach(System.out::println);
-
-            // Fetch all quiz attempts
-            QuizAttemptDAO quizAttemptDAO = new QuizAttemptDAOImpl();
-            System.out.println("Quiz Attempts:");
-            quizAttemptDAO.getAllQuizAttempts().forEach(System.out::println);
-  
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Specific actions using the Elearning Service like Course by specific User
+        try{
+            List<Course> userCourses = elearningService.getUserCourses(3);
+            System.out.println("Courses for user with id 3:");
+            for (Course course : userCourses) {
+                System.out.println(course);
+            }
+            System.out.println();
+        } catch (DAOException e) {
+            System.out.println("Error getting user courses: " + e.getMessage());
         }
     }
 }
+
+
+
 
 
