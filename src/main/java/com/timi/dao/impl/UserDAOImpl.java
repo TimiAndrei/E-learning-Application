@@ -12,23 +12,20 @@ import java.util.List;
 import com.timi.dao.CourseDAO;
 import com.timi.dao.DatabaseConnection;
 import com.timi.dao.UserDAO;
-import com.timi.exception.DAOException;
-import com.timi.exception.EmailAlreadyExistsException;
-import com.timi.exception.InvalidEmailException;
-import com.timi.model.Admin;
-import com.timi.model.Course;
-import com.timi.model.Instructor;
-import com.timi.model.Level;
-import com.timi.model.Student;
-import com.timi.model.User;
+import com.timi.exception.*;
+import com.timi.model.*;
+import com.timi.service.AuditingService;
+import com.timi.service.impl.AuditingServiceImpl;
 
 public class UserDAOImpl implements UserDAO {
     private DatabaseConnection dbConnection;
     private CourseDAO courseDAO;
+    private AuditingService auditingService;
 
     public UserDAOImpl() {
         dbConnection = DatabaseConnection.getInstance();
         courseDAO = new CourseDAOImpl();
+        auditingService = AuditingServiceImpl.getInstance();
     }
 
     @Override
@@ -41,7 +38,6 @@ public class UserDAOImpl implements UserDAO {
                 throw new EmailAlreadyExistsException("\nEmail already exists: " + user.getEmail());
             }
 
-            // check if user has id, if it has id, we should add the id in the query as well
             PreparedStatement ps = null;
             if (user.getId() != 0) {
                 ps = connection.prepareStatement("INSERT INTO Users (id, email, username, password, role, level, points, department, dateOfEmployment, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -55,7 +51,6 @@ public class UserDAOImpl implements UserDAO {
             ps.setString(3 + cnt, user.getPassword());
             ps.setString(4 + cnt, user.getRole().toString());
 
-            // Set parameters based on user role
             if (user instanceof Student) {
                 Student student = (Student) user;
                 ps.setString(5 + cnt, student.getLevel().toString());
@@ -96,10 +91,9 @@ public class UserDAOImpl implements UserDAO {
 
             ps.executeUpdate();
             ps.close();
-            System.out.println("User added successfully!");
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Failed to add user!");
         } catch (InvalidEmailException e) {
             e.printStackTrace();
             System.out.println("Failed to add user: " + e.getMessage());
@@ -134,7 +128,6 @@ public class UserDAOImpl implements UserDAO {
                 String password = resultSet.getString("password");
                 String role = resultSet.getString("role");
 
-                // Create user object (Student, Instructor, Admin) based on role
                 if (role.equals("STUDENT")) {
                     int points = resultSet.getInt("points");
                     String level = resultSet.getString("level");
@@ -151,6 +144,7 @@ public class UserDAOImpl implements UserDAO {
 
             resultSet.close();
             preparedStatement.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -173,7 +167,6 @@ public List<User> getAllUsers() throws DAOException {
             String password = resultSet.getString("password");
             String role = resultSet.getString("role");
 
-            // Create user object (Student, Instructor, Admin) based on role
             if (role.equals("STUDENT")) {
                 int points = resultSet.getInt("points");
                 String level = resultSet.getString("level");
@@ -196,6 +189,7 @@ public List<User> getAllUsers() throws DAOException {
 
         resultSet.close();
         preparedStatement.close();
+        auditingService.logCurrentAction();
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -218,7 +212,6 @@ public List<User> getAllUsers() throws DAOException {
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getRole().toString());
 
-            // Set parameters based on user role
             if (user instanceof Student) {
                 Student student = (Student) user;
                 ps.setString(5, student.getLevel().toString());
@@ -258,6 +251,7 @@ public List<User> getAllUsers() throws DAOException {
             }
             ps.setInt(10, user.getId());
             ps.executeUpdate();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -271,6 +265,7 @@ public List<User> getAllUsers() throws DAOException {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Users WHERE id = ?");
             ps.setInt(1, userId);
             ps.executeUpdate();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -285,6 +280,7 @@ public List<User> getAllUsers() throws DAOException {
             ps.setInt(1, userId);
             ps.setInt(2, courseId);
             ps.executeUpdate();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             e.printStackTrace();
         }

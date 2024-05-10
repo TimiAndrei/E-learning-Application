@@ -10,13 +10,17 @@ import com.timi.exception.DAOException;
 import com.timi.model.Category;
 import com.timi.model.Course;
 import com.timi.model.Level;
+import com.timi.service.AuditingService;
+import com.timi.service.impl.AuditingServiceImpl;
 
 public class CourseDAOImpl implements CourseDAO{
 
     private DatabaseConnection dbConnection;
+    private AuditingService auditingService;
 
     public CourseDAOImpl() {
         dbConnection = DatabaseConnection.getInstance();
+        auditingService = AuditingServiceImpl.getInstance();
     }
 
     @Override
@@ -42,6 +46,7 @@ public class CourseDAOImpl implements CourseDAO{
             ps.setString(7 + cnt, course.getCategory().toString());
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error adding course", e);
         }
@@ -77,6 +82,7 @@ public class CourseDAOImpl implements CourseDAO{
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting course", e);
         }
@@ -97,6 +103,7 @@ public class CourseDAOImpl implements CourseDAO{
             }
             rs.close();
             stmt.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching courses", e);
         }
@@ -118,6 +125,7 @@ public class CourseDAOImpl implements CourseDAO{
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching user courses", e);
         }
@@ -140,6 +148,7 @@ public class CourseDAOImpl implements CourseDAO{
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching courses by instructor", e);
         }
@@ -161,6 +170,7 @@ public class CourseDAOImpl implements CourseDAO{
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching courses by level", e);
         }
@@ -182,6 +192,7 @@ public class CourseDAOImpl implements CourseDAO{
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching courses by category", e);
         }
@@ -204,6 +215,7 @@ public class CourseDAOImpl implements CourseDAO{
             ps.setString(8, course.getCategory().toString());
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error updating course", e);
         }
@@ -218,6 +230,7 @@ public class CourseDAOImpl implements CourseDAO{
             ps.setInt(1, courseId);
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error deleting course", e);
         }

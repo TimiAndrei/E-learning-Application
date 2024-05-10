@@ -8,13 +8,17 @@ import com.timi.dao.ApplicationDAO;
 import com.timi.dao.DatabaseConnection;
 import com.timi.exception.DAOException;
 import com.timi.model.Application;
+import com.timi.service.AuditingService;
+import com.timi.service.impl.AuditingServiceImpl;
 
 public class ApplicationDAOImpl implements ApplicationDAO {
 
     private DatabaseConnection dbConnection;
+    private AuditingService auditingService;
 
     public ApplicationDAOImpl() {
        dbConnection = DatabaseConnection.getInstance();
+       auditingService = AuditingServiceImpl.getInstance();
     }
 
     @Override
@@ -37,6 +41,8 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setTimestamp(5 + cnt, new Timestamp(System.currentTimeMillis()));
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
+            
         } catch (SQLException e) {
             throw new DAOException("Error adding application", e);
         }
@@ -55,6 +61,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             stmt.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching applications", e);
         }
@@ -79,6 +86,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching applications by userId", e);
         }
@@ -99,6 +107,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching applications by courseId", e);
         }
@@ -114,6 +123,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setInt(2, applicationId);
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error updating application status", e);
         }
@@ -128,6 +138,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setInt(2, applicationId);
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error updating approval date", e);
         }
@@ -141,6 +152,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setInt(1, applicationId);
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error deleting application", e);
         }
@@ -159,6 +171,7 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             stmt.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error fetching pending applications", e);
         }

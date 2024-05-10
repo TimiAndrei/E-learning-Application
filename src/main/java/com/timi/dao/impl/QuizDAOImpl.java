@@ -12,15 +12,19 @@ import com.timi.dao.QuestionDAO;
 import com.timi.dao.QuizDAO;
 import com.timi.exception.DAOException;
 import com.timi.model.Quiz;
+import com.timi.service.AuditingService;
+import com.timi.service.impl.AuditingServiceImpl;
 
 public class QuizDAOImpl implements QuizDAO{
                                 
         private DatabaseConnection dbConnection;
         private QuestionDAO questionDAO;
+        private AuditingService auditingService;
     
         public QuizDAOImpl() {
             dbConnection = DatabaseConnection.getInstance();
             questionDAO = new QuestionDAOImpl();
+            auditingService = AuditingServiceImpl.getInstance();
         }
 
         @Override
@@ -34,6 +38,7 @@ public class QuizDAOImpl implements QuizDAO{
                 ps.setFloat(3, quiz.getDuration());
                 ps.executeUpdate();
                 ps.close();
+                auditingService.logCurrentAction();
             } catch (SQLException e) {
                 throw new DAOException("Error adding quiz", e);
             }
@@ -53,6 +58,7 @@ public class QuizDAOImpl implements QuizDAO{
                 }
                 rs.close();
                 ps.close();
+                auditingService.logCurrentAction();
             } catch (SQLException e) {
                 throw new DAOException("Error getting quiz", e);
             }
@@ -75,6 +81,7 @@ public class QuizDAOImpl implements QuizDAO{
                 }
                 rs.close();
                 ps.close();
+                auditingService.logCurrentAction();
             } catch (SQLException e) {
                 throw new DAOException("Error getting all quizzes", e);
             }
@@ -97,6 +104,7 @@ public class QuizDAOImpl implements QuizDAO{
                 }
                 rs.close();
                 ps.close();
+                auditingService.logCurrentAction();
             } catch (SQLException e) {
                 throw new DAOException("Error getting quizzes by course ID", e);
             }
@@ -116,6 +124,7 @@ public class QuizDAOImpl implements QuizDAO{
                 ps.setInt(4, quiz.getQuizId());
                 ps.executeUpdate();
                 ps.close();
+                auditingService.logCurrentAction();
             } catch (SQLException e) {
                 throw new DAOException("Error updating quiz", e);
             }
@@ -130,6 +139,7 @@ public class QuizDAOImpl implements QuizDAO{
                 ps.setInt(1, quizId);
                 ps.executeUpdate();
                 ps.close();
+                auditingService.logCurrentAction();
             } catch (SQLException e) {
                 throw new DAOException("Error deleting quiz", e);
             }

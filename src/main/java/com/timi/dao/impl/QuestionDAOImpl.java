@@ -17,13 +17,18 @@ import java.sql.SQLException;
 import com.timi.dao.DatabaseConnection;
 import com.timi.dao.QuestionDAO;
 import com.timi.exception.DAOException;
+import com.timi.service.AuditingService;
+import com.timi.service.impl.AuditingServiceImpl;
+
 
 public class QuestionDAOImpl implements QuestionDAO {
 
     private DatabaseConnection dbConnection;
+    private AuditingService auditingService;
 
     public QuestionDAOImpl() {
         dbConnection = DatabaseConnection.getInstance();
+        auditingService = AuditingServiceImpl.getInstance();
     }
 
     @Override
@@ -41,6 +46,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(5, question.getQuizId());
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error adding question", e);
         }
@@ -62,6 +68,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(1, questionId);
             question = new Question();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting question by ID", e);
         }
@@ -100,6 +107,7 @@ public class QuestionDAOImpl implements QuestionDAO {
 
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting all questions", e);
         }
@@ -133,6 +141,7 @@ public class QuestionDAOImpl implements QuestionDAO {
 
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting questions by quiz ID", e);
         }
@@ -155,6 +164,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(6, question.getQuestionId());
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error updating question", e);
         }
@@ -170,6 +180,7 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(1, questionId);
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error deleting question", e);
         }

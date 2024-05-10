@@ -17,13 +17,17 @@ import com.timi.dao.QuizAttemptDAO;
 import com.timi.exception.DAOException;
 import com.timi.model.Question;
 import com.timi.model.QuizAttempt;
+import com.timi.service.AuditingService;
+import com.timi.service.impl.AuditingServiceImpl;
 
 public class QuizAttemptDAOImpl implements QuizAttemptDAO {
     
     private DatabaseConnection dbConnection;
+    private AuditingService auditingService;
 
     public QuizAttemptDAOImpl() {
         dbConnection = DatabaseConnection.getInstance();
+        auditingService = AuditingServiceImpl.getInstance();
     }
 
     @Override
@@ -58,6 +62,8 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
                 }
                 psQuizAttemptQuestions.close();
             }
+            
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error adding quiz attempt", e);
         }
@@ -83,6 +89,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempt by ID", e);
         }
@@ -115,6 +122,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting all quiz attempts", e);
         }
@@ -156,6 +164,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting questions by attempt ID", e);
         }
@@ -185,6 +194,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempts by user ID", e);
         }
@@ -213,6 +223,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempts by quiz ID", e);
         }
@@ -242,6 +253,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempts by user ID and quiz ID", e);
         }
@@ -260,6 +272,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             ps.setInt(3, quizAttempt.getAttemptId());
             ps.executeUpdate();
             ps.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error updating quiz attempt", e);
         }
@@ -282,6 +295,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
 
             psQuizAttemptQuestions.close();
             psQuizAttempt.close();
+            auditingService.logCurrentAction();
         } catch (SQLException e) {
             throw new DAOException("Error deleting quiz attempt", e);
         }
