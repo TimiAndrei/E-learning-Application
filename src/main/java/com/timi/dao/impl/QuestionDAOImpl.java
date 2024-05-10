@@ -31,12 +31,13 @@ public class QuestionDAOImpl implements QuestionDAO {
         Connection connection = dbConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Questions (content, options, correctOptionIndex) VALUES (?, ?, ?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Questions (content, options, correctOptionIndex, selectedOptionIndex) VALUES (?, ?, ?, ?)");
             ps.setString(1, question.getContent());
             // Convert options list to JSON string and set it to the PreparedStatement
             String optionsJson = convertOptionsToJson(question.getOptions());
             ps.setString(2, optionsJson);
             ps.setInt(3, question.getCorrectOptionIndex());
+            ps.setInt(4, question.getSelectedOptionIndex());
             ps.executeUpdate();
             ps.close();
             connection.close();
@@ -93,6 +94,7 @@ public class QuestionDAOImpl implements QuestionDAO {
                 List<String> options = gson.fromJson(optionsJson, listType);
                 question.setOptions(options);
                 question.setCorrectOptionIndex(rs.getInt("correctOptionIndex"));
+                question.setSelectedOptionIndex(rs.getInt("selectedOptionIndex"));
                 questions.add(question);
             }
 
@@ -111,13 +113,14 @@ public class QuestionDAOImpl implements QuestionDAO {
         Connection connection = dbConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Questions SET content = ?, options = ?, correctOptionIndex = ? WHERE questionId = ?");
+            PreparedStatement ps = connection.prepareStatement("UPDATE Questions SET content = ?, options = ?, correctOptionIndex = ?, selectedOptionIndex=? WHERE questionId = ?");
             ps.setString(1, question.getContent());
             // Convert options list to JSON string and set it to the PreparedStatement
             String optionsJson = convertOptionsToJson(question.getOptions());
             ps.setString(2, optionsJson);
             ps.setInt(3, question.getCorrectOptionIndex());
             ps.setInt(4, question.getQuestionId());
+            ps.setInt(5, question.getSelectedOptionIndex());
             ps.executeUpdate();
             ps.close();
             connection.close();

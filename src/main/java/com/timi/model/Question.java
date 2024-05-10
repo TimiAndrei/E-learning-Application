@@ -7,6 +7,7 @@ public class Question {
     private String content;
     private List<String> options;
     private int correctOptionIndex;
+    private int selectedOptionIndex;
 
     public Question() {
     }
@@ -23,6 +24,29 @@ public class Question {
         this.content = content;
         this.options = options;
         this.correctOptionIndex = correctOptionIndex;
+    }
+
+    public Question(int questionId, String content, List<String> options, int correctOptionIndex, int selectedOptionIndex) {
+        this.questionId = questionId;
+        this.content = content;
+        this.options = options;
+        this.correctOptionIndex = correctOptionIndex;
+        this.selectedOptionIndex = selectedOptionIndex;
+    }
+
+    public Question(String content, List<String> options, int correctOptionIndex, int selectedOptionIndex) {
+        this.content = content;
+        this.options = options;
+        this.correctOptionIndex = correctOptionIndex;
+        this.selectedOptionIndex = selectedOptionIndex;
+    }
+
+    public int getSelectedOptionIndex() {
+        return selectedOptionIndex;
+    }
+
+    public void setSelectedOptionIndex(int selectedOptionIndex) {
+        this.selectedOptionIndex = selectedOptionIndex;
     }
 
     public int getQuestionId() {
