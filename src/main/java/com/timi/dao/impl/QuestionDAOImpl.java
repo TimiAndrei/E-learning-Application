@@ -31,13 +31,14 @@ public class QuestionDAOImpl implements QuestionDAO {
         Connection connection = dbConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Questions (content, options, correctOptionIndex, selectedOptionIndex) VALUES (?, ?, ?, ?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Questions (content, options, correctOptionIndex, selectedOptionIndex, quizId) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, question.getContent());
             // Convert options list to JSON string and set it to the PreparedStatement
             String optionsJson = convertOptionsToJson(question.getOptions());
             ps.setString(2, optionsJson);
             ps.setInt(3, question.getCorrectOptionIndex());
             ps.setInt(4, question.getSelectedOptionIndex());
+            ps.setInt(5, question.getQuizId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -93,6 +94,7 @@ public class QuestionDAOImpl implements QuestionDAO {
                 question.setOptions(options);
                 question.setCorrectOptionIndex(rs.getInt("correctOptionIndex"));
                 question.setSelectedOptionIndex(rs.getInt("selectedOptionIndex"));
+                question.setQuizId(rs.getInt("quizId"));
                 questions.add(question);
             }
 
@@ -106,18 +108,51 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
     @Override
+    public List<Question> getQuestionsByQuizId(int quizId) throws DAOException {
+        Connection connection = dbConnection.getConnection();
+        List<Question> questions = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Questions WHERE quizId = ?");
+            ps.setInt(1, quizId);
+            ResultSet rs = ps.executeQuery();
+            Gson gson = new GsonBuilder().create();
+
+            while (rs.next()) {
+                Question question = new Question();
+                question.setQuestionId(rs.getInt("questionId"));
+                question.setContent(rs.getString("content"));
+                String optionsJson = rs.getString("options");
+                Type listType = new TypeToken<List<String>>(){}.getType();
+                List<String> options = gson.fromJson(optionsJson, listType);
+                question.setOptions(options);
+                question.setCorrectOptionIndex(rs.getInt("correctOptionIndex"));
+                question.setSelectedOptionIndex(rs.getInt("selectedOptionIndex"));
+                questions.add(question);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            throw new DAOException("Error getting questions by quiz ID", e);
+        }
+        return questions;
+    }
+
+    @Override
     public void updateQuestion(Question question) throws DAOException {
         Connection connection = dbConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Questions SET content = ?, options = ?, correctOptionIndex = ?, selectedOptionIndex=? WHERE questionId = ?");
+            PreparedStatement ps = connection.prepareStatement("UPDATE Questions SET content = ?, options = ?, correctOptionIndex = ?, selectedOptionIndex=?, quizId=? WHERE questionId = ?");
             ps.setString(1, question.getContent());
             // Convert options list to JSON string and set it to the PreparedStatement
             String optionsJson = convertOptionsToJson(question.getOptions());
             ps.setString(2, optionsJson);
             ps.setInt(3, question.getCorrectOptionIndex());
-            ps.setInt(4, question.getQuestionId());
-            ps.setInt(5, question.getSelectedOptionIndex());
+            ps.setInt(4, question.getSelectedOptionIndex());
+            ps.setInt(5, question.getQuizId());
+            ps.setInt(6, question.getQuestionId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {

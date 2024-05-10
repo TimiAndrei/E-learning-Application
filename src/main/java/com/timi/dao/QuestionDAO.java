@@ -9,6 +9,7 @@ public interface QuestionDAO {
     void addQuestion(Question question) throws DAOException;
     Question getQuestionById(int questionId) throws DAOException;
     List<Question> getAllQuestions() throws DAOException;
+    List<Question> getQuestionsByQuizId(int quizId) throws DAOException;
     void updateQuestion(Question question) throws DAOException;
     void deleteQuestion(int questionId) throws DAOException;
 }

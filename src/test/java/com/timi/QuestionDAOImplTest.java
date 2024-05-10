@@ -21,7 +21,7 @@ public class QuestionDAOImplTest {
     @Test
     @DisplayName("Add Question Test")
     void addQuestionTest() {
-        Question question = new Question("What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1);
+        Question question = new Question("What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1, 1);
         assertDoesNotThrow(() -> questionDAO.addQuestion(question));
     }
 
@@ -43,7 +43,7 @@ public class QuestionDAOImplTest {
     @Test
     @DisplayName("Update Question Test")
     void updateQuestionTest() {
-        Question question = new Question(1, "What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1);
+        Question question = new Question(1, "What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1, 1);
         assertDoesNotThrow(() -> questionDAO.updateQuestion(question));
     }
 
@@ -53,6 +53,13 @@ public class QuestionDAOImplTest {
         int questionId = 1;
         assertDoesNotThrow(() -> questionDAO.deleteQuestion(questionId));
     }
-    
-    
+
+    @Test
+    @DisplayName("Get Questions By Quiz Id Test")
+    void getQuestionsByQuizIdTest() {
+        int quizId = 1;
+        List<Question> questions = assertDoesNotThrow(() -> questionDAO.getQuestionsByQuizId(quizId));
+        assertNotNull(questions);
+    }
+
 }

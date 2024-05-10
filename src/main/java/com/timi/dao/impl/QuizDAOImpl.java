@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.timi.dao.DatabaseConnection;
+import com.timi.dao.QuestionDAO;
 import com.timi.dao.QuizDAO;
 import com.timi.exception.DAOException;
 import com.timi.model.Quiz;
@@ -15,9 +16,11 @@ import com.timi.model.Quiz;
 public class QuizDAOImpl implements QuizDAO{
                                 
         private DatabaseConnection dbConnection;
+        private QuestionDAO questionDAO;
     
         public QuizDAOImpl() {
             dbConnection = DatabaseConnection.getInstance();
+            questionDAO = new QuestionDAOImpl();
         }
 
         @Override
@@ -61,12 +64,13 @@ public class QuizDAOImpl implements QuizDAO{
         public List<Quiz> getAllQuizzes() throws DAOException {
             Connection connection = dbConnection.getConnection();
             List<Quiz> quizzes = new ArrayList<>();
-    
+        
             try {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM Quizzes");
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     Quiz quiz = new Quiz(rs.getInt("quizId"), rs.getString("title"), rs.getInt("courseId"), rs.getFloat("duration"));
+                    quiz.setQuestions(questionDAO.getQuestionsByQuizId(quiz.getQuizId())); // Set questions for the quiz
                     quizzes.add(quiz);
                 }
                 rs.close();
@@ -74,7 +78,7 @@ public class QuizDAOImpl implements QuizDAO{
             } catch (SQLException e) {
                 throw new DAOException("Error getting all quizzes", e);
             }
-    
+        
             return quizzes;
         }
 

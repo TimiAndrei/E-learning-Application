@@ -22,7 +22,7 @@ public class QuizDAOImplTest {
     @Test
     @DisplayName("Add Quiz Test")
     void addQuizTest() {
-        List<Question> questions = List.of(new Question("What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1));
+        List<Question> questions = List.of(new Question("What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1, 1));
         assertDoesNotThrow(() -> quizDAO.addQuiz(new Quiz("Nigeria Quiz", questions, 1, 10.0f)));
     }
 
@@ -52,7 +52,7 @@ public class QuizDAOImplTest {
     @Test
     @DisplayName("Update Quiz Test")
     void updateQuizTest() {
-        List<Question> questions = List.of(new Question("What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1));
+        List<Question> questions = List.of(new Question("What is the capital of Nigeria?", List.of("Lagos", "Abuja", "Kano", "Ibadan"), 1,1));
         Quiz quiz = new Quiz(1, "Nigeria Quiz", questions, 1, 10.0f);
         assertDoesNotThrow(() -> quizDAO.updateQuiz(quiz));
     }

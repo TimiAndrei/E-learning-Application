@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Applications, Users, Courses, Course_categories, Questions, Quizzes, Quiz_questions, User_courses, QuizAttempts, QuizAttemptQuestions;
+DROP TABLE IF EXISTS Applications, Users, Courses, Course_categories, Questions, Quizzes, User_courses, QuizAttempts, QuizAttemptQuestions;
 
 CREATE TABLE IF NOT EXISTS Users (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -31,14 +31,6 @@ CREATE TABLE IF NOT EXISTS Course_categories (
     FOREIGN KEY (courseId) REFERENCES courses(courseId) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Questions (
-    questionId INT PRIMARY KEY AUTO_INCREMENT,
-    content VARCHAR(255) NOT NULL,
-    options TEXT NOT NULL, -- will be stored as JSON
-    correctOptionIndex INT NOT NULL,
-    selectedOptionIndex INT -- for quiz attempts
-);
-
 CREATE TABLE IF NOT EXISTS Quizzes (
     quizId INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -47,13 +39,14 @@ CREATE TABLE IF NOT EXISTS Quizzes (
     FOREIGN KEY (courseId) REFERENCES courses(courseId) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Quiz_questions (
-    quizId INT,
-    questionId INT,
-    PRIMARY KEY (quizId, questionId),
-    FOREIGN KEY (questionId) REFERENCES questions(questionId) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS Questions (
+    questionId INT PRIMARY KEY AUTO_INCREMENT,
+    content VARCHAR(255) NOT NULL,
+    options TEXT NOT NULL, -- will be stored as JSON
+    correctOptionIndex INT NOT NULL,
+    selectedOptionIndex INT, -- for quiz attempts
+    quizId INT, -- for quiz questions
     FOREIGN KEY (quizId) REFERENCES quizzes(quizId) ON DELETE CASCADE
-    
 );
 
 CREATE TABLE IF NOT EXISTS User_courses (
@@ -101,9 +94,8 @@ INSERT INTO Users (email, username, password, role, level, points) VALUES ('stud
 INSERT INTO Users (email, username, password, role, department, dateOfEmployment ) VALUES ('instructor@unibuc.ro', 'instructor', 'instructor', 'INSTRUCTOR', 'Computer Science', '2020-10-01');
 INSERT INTO Courses (title, description, instructor, level, price, duration) VALUES ('Java for beginners', 'Learn Java from scratch', 1, 'BEGINNER', 100, 30);
 INSERT INTO Course_categories (courseId, category) VALUES (1, 'JAVA');
-INSERT INTO Questions (content, options, correctOptionIndex) VALUES ('What is Java?', '["Programming Language", "Database", "Operating System", "Web Browser"]', 0);
 INSERT INTO Quizzes (title, courseId, duration) VALUES ('Java Quiz', 1, 10);
-INSERT INTO Quiz_questions (quizId, questionId) VALUES (1, 1);
+INSERT INTO Questions (content, options, correctOptionIndex, quizId) VALUES ('What is Java?', '["Programming Language", "Database", "Operating System", "Web Browser"]', 0, 1);
 INSERT INTO User_courses (userId, courseId) VALUES (1, 1);
 INSERT INTO Applications (userId, courseId, applicationLetter, status, applicationDate) VALUES (1, 1, 'I want to learn Java', 'PENDING', NOW());
 INSERT INTO QuizAttempts (userId, quizId, timestamp, score, durationAttempted) VALUES (1, 1, NOW(), 40, 22.35);

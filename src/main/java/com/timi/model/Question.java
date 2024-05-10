@@ -8,37 +8,50 @@ public class Question {
     private List<String> options;
     private int correctOptionIndex;
     private int selectedOptionIndex;
+    private int quizId;
 
     public Question() {
     }
 
-    public Question(int questionId, String content, List<String> options, int correctOptionIndex) {
+    public Question(int questionId, String content, List<String> options, int correctOptionIndex, int quizId) {
         this.questionId = questionId;
         this.content = content;
         this.options = options;
         this.correctOptionIndex = correctOptionIndex;
+        this.quizId = quizId;
     }
 
     // constructor without questionId
-    public Question(String content, List<String> options, int correctOptionIndex) {
+    public Question(String content, List<String> options, int correctOptionIndex, int quizId) {
         this.content = content;
         this.options = options;
         this.correctOptionIndex = correctOptionIndex;
+        this.quizId = quizId;
     }
 
-    public Question(int questionId, String content, List<String> options, int correctOptionIndex, int selectedOptionIndex) {
+    public Question(int questionId, String content, List<String> options, int correctOptionIndex, int selectedOptionIndex, int quizId) {
         this.questionId = questionId;
         this.content = content;
         this.options = options;
         this.correctOptionIndex = correctOptionIndex;
         this.selectedOptionIndex = selectedOptionIndex;
+        this.quizId = quizId;
     }
 
-    public Question(String content, List<String> options, int correctOptionIndex, int selectedOptionIndex) {
+    public Question(String content, List<String> options, int correctOptionIndex, int selectedOptionIndex, int quizId) {
         this.content = content;
         this.options = options;
         this.correctOptionIndex = correctOptionIndex;
         this.selectedOptionIndex = selectedOptionIndex;
+        this.quizId = quizId;
+    }
+
+    public int getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
     }
 
     public int getSelectedOptionIndex() {
@@ -84,7 +97,7 @@ public class Question {
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", content=" + content + ", options=" + options
-                + ", correctOptionIndex=" + correctOptionIndex + "]";
+                + ", correctOptionIndex=" + correctOptionIndex  + ", selectedOptionIndex=" + selectedOptionIndex +"quizId=" + quizId +"]";
     }
 
     @Override
@@ -95,6 +108,8 @@ public class Question {
         result = prime * result + ((content == null) ? 0 : content.hashCode());
         result = prime * result + ((options == null) ? 0 : options.hashCode());
         result = prime * result + correctOptionIndex;
+        result = prime * result + selectedOptionIndex;
+        result = prime * result + quizId;
         return result;
     }
 
@@ -120,6 +135,10 @@ public class Question {
         } else if (!options.equals(other.options))
             return false;
         if (correctOptionIndex != other.correctOptionIndex)
+            return false;
+        if (selectedOptionIndex != other.selectedOptionIndex)
+            return false;
+        if (quizId != other.quizId)
             return false;
         return true;
     }
