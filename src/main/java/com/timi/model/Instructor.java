@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-// Instructor.java
 public class Instructor extends User {
     private Date dateOfEmployment;
     private String department;
@@ -17,7 +16,6 @@ public class Instructor extends User {
         this.teachingCourses = new ArrayList<>();
     }
 
-    // Constructor without id
     public Instructor(String email, String username, String password, Date dateOfEmployment, String department) {
         super(email, username, password, "INSTRUCTOR");
         this.dateOfEmployment = dateOfEmployment;
@@ -49,12 +47,10 @@ public class Instructor extends User {
         this.teachingCourses = teachingCourses;
     }
 
-    //implement validation for email
     public boolean validateEmail(String email) {
         return email.contains("@unibuc.ro");
     }
 
-    // Additional methods
     public void addTeachingCourse(Course course) {
         teachingCourses.add(course);
     }

@@ -15,7 +15,6 @@ public class Student extends User {
         this.enrolledCourses = new ArrayList<>();
     }
 
-    // Constructor without id
     public Student(String email, String username, String password, Level level, int points) {
         super(email, username, password, "STUDENT");
         this.level = level;
@@ -48,7 +47,6 @@ public class Student extends User {
         this.level = level;
     }
 
-    // Additional methods
     public void enrollInCourse(Course course) {
         enrolledCourses.add(course);
     }
@@ -59,7 +57,6 @@ public class Student extends User {
         }
     }
 
-    //implement validation for email
     public boolean validateEmail(String email) {
         return email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
     }

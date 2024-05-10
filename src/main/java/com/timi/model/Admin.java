@@ -25,21 +25,6 @@ public class Admin extends User {
         this.telephone = telephone;
     }
 
-
-    public void updateAdmin(String name, String username, String password, String telephone) {
-        // Logic to update admin details
-    }
-
-    // Additional methods
-    public void createUser(String name, String username, String password, String role) {
-        // Logic to create a new user with specified role
-    }
-
-    public void deleteUser(int userId) {
-        // Logic to delete a user by ID
-    }
-
-    //implement validation for email
     public boolean validateEmail(String email) {
         return email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
     }

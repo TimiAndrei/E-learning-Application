@@ -21,7 +21,6 @@ public class Question {
         this.quizId = quizId;
     }
 
-    // constructor without questionId
     public Question(String content, List<String> options, int correctOptionIndex, int quizId) {
         this.content = content;
         this.options = options;

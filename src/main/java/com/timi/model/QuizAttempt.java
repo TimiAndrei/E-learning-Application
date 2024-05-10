@@ -25,7 +25,6 @@ public class QuizAttempt {
         this.durationAttempted = durationAttempted;
     }
 
-    // constructor without attemptId
     public QuizAttempt(int userId, int quizId, LocalDateTime timestamp, int score, List<Question> questionsAttempted, float durationAttempted) {
         this.userId = userId;
         this.quizId = quizId;

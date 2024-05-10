@@ -22,14 +22,14 @@ public class App {
             System.out.println("Error loading data from the database: " + e.getMessage());
         }
 
-        // Printing all the data from the database 
+        // Printing all the data from the database using the Data Service
         try {
             dataService.printAllData();
         } catch (DAOException e) {
             System.out.println("Error printing data: " + e.getMessage());
         }
 
-        // Specific actions using the Elearning Service like getting all the pending applications
+        // Specific actions using the Elearning Service 
         try{
             Queue<Application> pendingApplications = elearningService.getPendingApplications();
             System.out.println("Pending applications:");
@@ -41,7 +41,6 @@ public class App {
             System.out.println("Error getting pending applications: " + e.getMessage());
         }
 
-        // Specific actions using the Elearning Service like Course by specific User
         try{
             List<Course> userCourses = elearningService.getUserCourses(3);
             System.out.println("Courses for user with id 3:");

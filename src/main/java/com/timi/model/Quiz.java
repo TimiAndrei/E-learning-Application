@@ -20,7 +20,6 @@ public class Quiz {
         this.duration = duration;
     }
 
-    // constructor without quizId
     public Quiz(String title, List<Question> questions, int courseId, float duration) {
         this.title = title;
         this.questions = questions;
@@ -28,7 +27,6 @@ public class Quiz {
         this.duration = duration;
     }
 
-    // constructor without questions
     public Quiz(int quizId, String title, int courseId, float duration) {
         this.quizId = quizId;
         this.title = title;
@@ -36,7 +34,6 @@ public class Quiz {
         this.duration = duration;
     }
 
-    // constructor without quizId and questions
     public Quiz(String title, int courseId, float duration) {
         this.title = title;
         this.courseId = courseId;

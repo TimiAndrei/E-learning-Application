@@ -29,7 +29,6 @@ public class Course {
         this.quizzes = quizzes;
     }
 
-    // constructor without courseId
     public Course(String title, String description, int instructorId, Level level, Double price, int duration, Category category, List<Quiz> quizzes) {
         this.title = title;
         this.description = description;

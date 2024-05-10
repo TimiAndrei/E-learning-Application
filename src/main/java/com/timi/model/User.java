@@ -65,9 +65,6 @@ public abstract class User {
         this.password = password;
     }
 
-
-
-    // Abstract method to be implemented by subclasses
     public abstract boolean validateEmail(String email);
 
     public void login() {
