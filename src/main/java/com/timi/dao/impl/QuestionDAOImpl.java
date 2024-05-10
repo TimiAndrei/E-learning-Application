@@ -40,7 +40,6 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(4, question.getSelectedOptionIndex());
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error adding question", e);
         }
@@ -62,7 +61,6 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(1, questionId);
             question = new Question();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting question by ID", e);
         }
@@ -100,7 +98,6 @@ public class QuestionDAOImpl implements QuestionDAO {
 
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting all questions", e);
         }
@@ -123,7 +120,6 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(5, question.getSelectedOptionIndex());
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error updating question", e);
         }
@@ -139,7 +135,6 @@ public class QuestionDAOImpl implements QuestionDAO {
             ps.setInt(1, questionId);
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error deleting question", e);
         }

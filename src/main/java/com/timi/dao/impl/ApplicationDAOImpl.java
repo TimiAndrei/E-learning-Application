@@ -37,7 +37,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setTimestamp(5 + cnt, new Timestamp(System.currentTimeMillis()));
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error adding application", e);
         }
@@ -56,7 +55,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             stmt.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error fetching applications", e);
         }
@@ -81,7 +79,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error fetching applications by userId", e);
         }
@@ -102,7 +99,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error fetching applications by courseId", e);
         }
@@ -118,7 +114,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setInt(2, applicationId);
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error updating application status", e);
         }
@@ -133,7 +128,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setInt(2, applicationId);
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error updating approval date", e);
         }
@@ -147,7 +141,6 @@ public class ApplicationDAOImpl implements ApplicationDAO {
             ps.setInt(1, applicationId);
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error deleting application", e);
         }

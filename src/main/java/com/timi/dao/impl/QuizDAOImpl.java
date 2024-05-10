@@ -31,7 +31,6 @@ public class QuizDAOImpl implements QuizDAO{
                 ps.setFloat(3, quiz.getDuration());
                 ps.executeUpdate();
                 ps.close();
-                connection.close();
             } catch (SQLException e) {
                 throw new DAOException("Error adding quiz", e);
             }
@@ -51,7 +50,6 @@ public class QuizDAOImpl implements QuizDAO{
                 }
                 rs.close();
                 ps.close();
-                connection.close();
             } catch (SQLException e) {
                 throw new DAOException("Error getting quiz", e);
             }
@@ -73,7 +71,6 @@ public class QuizDAOImpl implements QuizDAO{
                 }
                 rs.close();
                 ps.close();
-                connection.close();
             } catch (SQLException e) {
                 throw new DAOException("Error getting all quizzes", e);
             }
@@ -96,7 +93,6 @@ public class QuizDAOImpl implements QuizDAO{
                 }
                 rs.close();
                 ps.close();
-                connection.close();
             } catch (SQLException e) {
                 throw new DAOException("Error getting quizzes by course ID", e);
             }
@@ -116,7 +112,6 @@ public class QuizDAOImpl implements QuizDAO{
                 ps.setInt(4, quiz.getQuizId());
                 ps.executeUpdate();
                 ps.close();
-                connection.close();
             } catch (SQLException e) {
                 throw new DAOException("Error updating quiz", e);
             }
@@ -131,7 +126,6 @@ public class QuizDAOImpl implements QuizDAO{
                 ps.setInt(1, quizId);
                 ps.executeUpdate();
                 ps.close();
-                connection.close();
             } catch (SQLException e) {
                 throw new DAOException("Error deleting quiz", e);
             }

@@ -78,7 +78,6 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempt by ID", e);
         }
@@ -106,7 +105,6 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting all quiz attempts", e);
         }
@@ -135,7 +133,6 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempts by user ID", e);
         }
@@ -164,7 +161,6 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempts by quiz ID", e);
         }
@@ -194,7 +190,6 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
             throw new DAOException("Error getting quiz attempts by user ID and quiz ID", e);
         }
