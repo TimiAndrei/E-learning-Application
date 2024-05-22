@@ -107,4 +107,14 @@ public class ElearningServiceImpl implements ElearningService{
         return applicationDAO.getPendingApplications();
     }       
 
+    @Override
+    public User authenticateUser(String email, String password) throws DAOException {
+        return userDAO.authenticateUser(email, password);
+    }
+
+    @Override
+    public void registerUser(String email, String username, String password) throws DAOException {
+        userDAO.registerUser(email, username, password);
+    }
+
 }

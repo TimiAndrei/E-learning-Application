@@ -20,5 +20,4 @@ public interface DataService {
     public List<User> getUsers();
     public void setApplications(Queue<Application> applications);
     public Queue<Application> getApplications();
-    
 }

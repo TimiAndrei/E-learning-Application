@@ -286,6 +286,61 @@ public List<User> getAllUsers() throws DAOException {
         }
     }
 
+    @Override
+    public User authenticateUser(String email, String password) {
+        Connection connection = dbConnection.getConnection();
+        User user = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ? AND password = ?");
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int userId = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String role = resultSet.getString("role");
+
+                if (role.equals("STUDENT")) {
+                    int points = resultSet.getInt("points");
+                    String level = resultSet.getString("level");
+                    user = new Student(userId, email, username, password, Level.valueOf(level), points);
+                } else if (role.equals("INSTRUCTOR")) {
+                    String department = resultSet.getString("department");
+                    Date dateOfEmployment = resultSet.getDate("dateOfEmployment");
+                    user = new Instructor(userId, email, username, password, dateOfEmployment, department);
+                } else if (role.equals("ADMIN")) {
+                    String telephone = resultSet.getString("telephone");
+                    user = new Admin(userId, email, username, password, telephone);
+                }
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            auditingService.logCurrentAction();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    @Override
+    public void registerUser(String email, String username, String password) {
+        try {
+            if (emailExists(email)) {
+                System.out.println("Failed to register user!");
+                throw new EmailAlreadyExistsException("\nEmail already exists: " + email);
+            }
+            User user = new Student(email, username, password, Level.BEGINNER, 0);
+            addUser(user);
+            System.out.println("User registered successfully!");
+            auditingService.logCurrentAction();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 

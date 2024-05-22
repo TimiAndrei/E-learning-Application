@@ -16,4 +16,8 @@ public interface ElearningService {
     List<Course> getUserCourses(int userId) throws DAOException;
     Queue<Application> getAllApplications() throws DAOException; 
     Queue<Application> getPendingApplications() throws DAOException;
+
+    User authenticateUser(String email, String password) throws DAOException;
+    void registerUser(String email, String username, String password) throws DAOException;
+
 }

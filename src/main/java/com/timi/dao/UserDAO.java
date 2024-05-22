@@ -13,4 +13,7 @@ public interface UserDAO {
     void updateUser(User user) throws DAOException, InvalidEmailException;
     void deleteUser(int id) throws DAOException;
     void addCourseToUser(int userId, int courseId) throws DAOException;
+
+    User authenticateUser(String email, String password) throws DAOException;
+    void registerUser(String email, String username, String password) throws DAOException;
 }
