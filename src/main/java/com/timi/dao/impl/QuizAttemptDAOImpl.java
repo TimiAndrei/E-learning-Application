@@ -51,20 +51,29 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
             ps.setFloat(5 + cnt, quizAttempt.getDurationAttempted());
             ps.executeUpdate();
             ps.close();
-            if (quizAttempt.getQuestionsAttempted() != null) {
-                String insertQuizAttemptQuestionsQuery = "INSERT INTO QuizAttemptQuestions (attemptId, questionId, selectedOptionIndex) VALUES (?, ?, ?)";
-                PreparedStatement psQuizAttemptQuestions = connection.prepareStatement(insertQuizAttemptQuestionsQuery);
-                for (Question question : quizAttempt.getQuestionsAttempted()) {
-                    psQuizAttemptQuestions.setInt(1, quizAttempt.getAttemptId());
-                    psQuizAttemptQuestions.setInt(2, question.getQuestionId());
-                    psQuizAttemptQuestions.setInt(3, question.getSelectedOptionIndex());
-                    psQuizAttemptQuestions.executeUpdate();
+
+            if (quizAttempt.getAttemptId() == 0) {
+                PreparedStatement psGetId = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+                ResultSet rs = psGetId.executeQuery();
+                if (rs.next()) {
+                    quizAttempt.setAttemptId(rs.getInt(1));
                 }
-                psQuizAttemptQuestions.close();
+                rs.close();
+                psGetId.close();
+            }
+
+            for (Question question : quizAttempt.getQuestionsAttempted()) {
+                PreparedStatement psQuestions = connection.prepareStatement("INSERT INTO QuizAttemptQuestions (attemptId, questionId, selectedOptionIndex) VALUES (?, ?, ?)");
+                psQuestions.setInt(1, quizAttempt.getAttemptId());
+                psQuestions.setInt(2, question.getQuestionId());
+                psQuestions.setInt(3, question.getSelectedOptionIndex());
+                psQuestions.executeUpdate();
+                psQuestions.close();
             }
             
             auditingService.logCurrentAction();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DAOException("Error adding quiz attempt", e);
         }
     }
@@ -77,7 +86,7 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM QuizAttempts WHERE attemptId = ?");
             ps.setInt(1, attemptId);
-            var rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 quizAttempt = new QuizAttempt();
                 quizAttempt.setAttemptId(rs.getInt("attemptId"));
@@ -86,6 +95,9 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
                 quizAttempt.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
                 quizAttempt.setScore(rs.getInt("score"));
                 quizAttempt.setDurationAttempted(rs.getFloat("durationAttempted"));
+                
+                List<Question> questionsAttempted = getQuestionsByAttemptId(quizAttempt.getAttemptId());
+                quizAttempt.setQuestionsAttempted(questionsAttempted);
             }
             rs.close();
             ps.close();
@@ -191,6 +203,9 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
                 quizAttempt.setScore(rs.getInt("score"));
                 quizAttempt.setDurationAttempted(rs.getFloat("durationAttempted"));
                 quizAttempts.add(quizAttempt);
+
+                List<Question> questionsAttempted = getQuestionsByAttemptId(quizAttempt.getAttemptId());
+                quizAttempt.setQuestionsAttempted(questionsAttempted);
             }
             rs.close();
             ps.close();
@@ -220,6 +235,9 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
                 quizAttempt.setScore(rs.getInt("score"));
                 quizAttempt.setDurationAttempted(rs.getFloat("durationAttempted"));
                 quizAttempts.add(quizAttempt);
+
+                List<Question> questionsAttempted = getQuestionsByAttemptId(quizAttempt.getAttemptId());
+                quizAttempt.setQuestionsAttempted(questionsAttempted);
             }
             rs.close();
             ps.close();
@@ -250,6 +268,9 @@ public class QuizAttemptDAOImpl implements QuizAttemptDAO {
                 quizAttempt.setScore(rs.getInt("score"));
                 quizAttempt.setDurationAttempted(rs.getFloat("durationAttempted"));
                 quizAttempts.add(quizAttempt);
+
+                List<Question> questionsAttempted = getQuestionsByAttemptId(quizAttempt.getAttemptId());
+                quizAttempt.setQuestionsAttempted(questionsAttempted);
             }
             rs.close();
             ps.close();

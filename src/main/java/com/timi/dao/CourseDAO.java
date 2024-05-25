@@ -23,5 +23,7 @@ public interface CourseDAO {
     void updateCourse(Course course) throws DAOException;
 
     void deleteCourse(int courseId) throws DAOException;
+
+    Course getCourseByName(String name) throws DAOException;
 }
 

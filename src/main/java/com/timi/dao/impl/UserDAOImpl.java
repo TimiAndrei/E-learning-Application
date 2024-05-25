@@ -334,7 +334,6 @@ public List<User> getAllUsers() throws DAOException {
             }
             User user = new Student(email, username, password, Level.BEGINNER, 0);
             addUser(user);
-            System.out.println("User registered successfully!");
             auditingService.logCurrentAction();
         } catch (SQLException e) {
             e.printStackTrace();

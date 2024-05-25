@@ -6,6 +6,7 @@ import java.util.Queue;
 import com.timi.dao.*;
 import com.timi.dao.impl.*;
 import com.timi.exception.DAOException;
+import com.timi.exception.InvalidEmailException;
 import com.timi.model.*;
 import com.timi.service.ElearningService;
 
@@ -115,6 +116,97 @@ public class ElearningServiceImpl implements ElearningService{
     @Override
     public void registerUser(String email, String username, String password) throws DAOException {
         userDAO.registerUser(email, username, password);
+    }
+
+
+    @Override
+    public void updateUser(User user) throws DAOException, InvalidEmailException {
+        userDAO.updateUser(user);
+    }
+
+    @Override
+    public User getUserById(int id) throws DAOException {
+        return userDAO.getUserById(id);
+    }
+
+    @Override
+    public void deleteUser(int id) throws DAOException {
+        userDAO.deleteUser(id);
+    }
+
+    @Override
+    public void addCourse(Course course) throws DAOException {
+        courseDAO.addCourse(course);
+    }
+
+    @Override
+    public void updateCourse(Course course) throws DAOException {
+        courseDAO.updateCourse(course);
+    }
+
+    @Override
+    public void deleteCourse(int id) throws DAOException {
+        courseDAO.deleteCourse(id);
+    }
+
+    @Override
+    public void addQuiz(Quiz quiz) throws DAOException {
+        quizDAO.addQuiz(quiz);
+    }
+
+    @Override
+    public void addQuestion(Question question) throws DAOException {
+        questionDAO.addQuestion(question);
+    }
+
+    @Override
+    public void editQuestion(Question question) throws DAOException {
+        questionDAO.updateQuestion(question);
+    }
+
+    @Override
+    public void deleteQuestion(int id) throws DAOException {
+        questionDAO.deleteQuestion(id);
+    }
+
+    @Override
+    public void searchCoursesByName(String name) throws DAOException {
+        courseDAO.getCourseByName(name);
+    }
+
+    @Override
+    public void applyForCourse(Application application) throws DAOException {
+        applicationDAO.addApplication(application);
+    }
+
+    @Override
+    public Question getQuestionById(int id) throws DAOException {
+        return questionDAO.getQuestionById(id);
+    }
+
+    @Override
+    public Course getCourseByName(String name) throws DAOException {
+        return courseDAO.getCourseByName(name);
+    }
+
+    @Override
+    public void takeQuiz(QuizAttempt quizAttempt) throws DAOException {
+        quizAttemptDAO.addQuizAttempt(quizAttempt);
+    }
+
+    @Override
+    public List<Quiz> getQuizzesByCourse(int courseId) throws DAOException {
+        return quizDAO.getQuizzesByCourseId(courseId);
+    }
+
+    @Override
+    public Quiz getQuizById(int id) throws DAOException {
+        return quizDAO.getQuizById(id);
+    }
+
+    @Override
+    public List<QuizAttempt> getUserQuizAttempts(int userId) throws DAOException {
+        return quizAttemptDAO.getQuizAttemptsByUserId(userId);
     }
 
 }

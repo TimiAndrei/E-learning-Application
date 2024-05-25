@@ -45,6 +45,13 @@ public class Question {
         this.quizId = quizId;
     }
 
+    public Question(int questionId, String content, List<String> options, int correctOptionIndex) {
+        this.questionId = questionId;
+        this.content = content;
+        this.options = options;
+        this.correctOptionIndex = correctOptionIndex;
+    }
+
     public int getQuizId() {
         return quizId;
     }

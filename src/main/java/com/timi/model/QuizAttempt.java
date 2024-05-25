@@ -13,6 +13,7 @@ public class QuizAttempt {
     private float durationAttempted;
 
     public QuizAttempt() {
+        this.timestamp = LocalDateTime.now();
     }
 
     public QuizAttempt(int attemptId, int userId, int quizId, LocalDateTime timestamp, int score, List<Question> questionsAttempted, float durationAttempted) {
@@ -88,6 +89,16 @@ public class QuizAttempt {
 
     public void setQuestionsAttempted(List<Question> questionsAttempted) {
         this.questionsAttempted = questionsAttempted;
+    }
+
+    public int calculateQuizScore() {
+        int totalScore = 0;
+        for (Question question : questionsAttempted) {
+            if (question.getSelectedOptionIndex() == question.getCorrectOptionIndex()) {
+                totalScore++;
+            }
+        }
+        return totalScore;
     }
 
     @Override

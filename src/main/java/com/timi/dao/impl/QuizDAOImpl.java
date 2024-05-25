@@ -48,21 +48,22 @@ public class QuizDAOImpl implements QuizDAO{
         public Quiz getQuizById(int quizId) throws DAOException {
             Connection connection = dbConnection.getConnection();
             Quiz quiz = null;
-    
+        
             try {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM Quizzes WHERE quizId = ?");
                 ps.setInt(1, quizId);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     quiz = new Quiz(rs.getInt("quizId"), rs.getString("title"), rs.getInt("courseId"), rs.getFloat("duration"));
+                    quiz.setQuestions(questionDAO.getQuestionsByQuizId(quiz.getQuizId())); // Set questions for the quiz
                 }
                 rs.close();
                 ps.close();
                 auditingService.logCurrentAction();
             } catch (SQLException e) {
-                throw new DAOException("Error getting quiz", e);
+                throw new DAOException("Error getting quiz by ID", e);
             }
-    
+        
             return quiz;
         }
 
@@ -93,13 +94,14 @@ public class QuizDAOImpl implements QuizDAO{
         public List<Quiz> getQuizzesByCourseId(int courseId) throws DAOException {
             Connection connection = dbConnection.getConnection();
             List<Quiz> quizzes = new ArrayList<>();
-    
+        
             try {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM Quizzes WHERE courseId = ?");
                 ps.setInt(1, courseId);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     Quiz quiz = new Quiz(rs.getInt("quizId"), rs.getString("title"), rs.getInt("courseId"), rs.getFloat("duration"));
+                    quiz.setQuestions(questionDAO.getQuestionsByQuizId(quiz.getQuizId())); // Set questions for the quiz
                     quizzes.add(quiz);
                 }
                 rs.close();
@@ -108,7 +110,7 @@ public class QuizDAOImpl implements QuizDAO{
             } catch (SQLException e) {
                 throw new DAOException("Error getting quizzes by course ID", e);
             }
-    
+        
             return quizzes;
         }
 

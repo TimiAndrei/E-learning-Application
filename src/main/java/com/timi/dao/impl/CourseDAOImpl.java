@@ -235,5 +235,25 @@ public class CourseDAOImpl implements CourseDAO{
             throw new DAOException("Error deleting course", e);
         }
     }
+
+    @Override
+    public Course getCourseByName(String name) throws DAOException {
+        Connection connection = dbConnection.getConnection();
+        Course course = null;
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Courses WHERE title = ?");
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                course = extractCourseFromResultSet(rs);
+            }
+            rs.close();
+            ps.close();
+            auditingService.logCurrentAction();
+        } catch (SQLException e) {
+            throw new DAOException("Error getting course by name", e);
+        }
+        return course;
+    }
     
 }

@@ -23,6 +23,13 @@ public class Instructor extends User {
         this.teachingCourses = new ArrayList<>();
     }
 
+    public Instructor(int id, String email, String username, String password) {
+        super(id, email, username, password);
+        this.dateOfEmployment = new Date();
+        this.department = "Unknown";
+        this.teachingCourses = new ArrayList<>();
+    }
+
     public Date getDateOfEmployment() {
         return dateOfEmployment;
     }
@@ -47,6 +54,7 @@ public class Instructor extends User {
         this.teachingCourses = teachingCourses;
     }
 
+    @Override
     public boolean validateEmail(String email) {
         return email.contains("@unibuc.ro");
     }

@@ -22,6 +22,13 @@ public class Student extends User {
         this.enrolledCourses = new ArrayList<>();
     }
 
+    public Student(int id, String email, String username, String password) {
+        super(id, email, username, password);
+        this.level = Level.BEGINNER;
+        this.points = 0;
+        this.enrolledCourses = new ArrayList<>();
+    }
+
 
     public List<Course> getEnrolledCourses() {
         return enrolledCourses;
@@ -57,6 +64,7 @@ public class Student extends User {
         }
     }
 
+    @Override
     public boolean validateEmail(String email) {
         return email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
     }

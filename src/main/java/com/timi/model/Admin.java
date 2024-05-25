@@ -25,6 +25,7 @@ public class Admin extends User {
         this.telephone = telephone;
     }
 
+    @Override
     public boolean validateEmail(String email) {
         return email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
     }
