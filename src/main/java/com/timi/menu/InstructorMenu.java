@@ -11,12 +11,7 @@ import com.timi.model.*;
 public class InstructorMenu extends Menu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static ElearningService elearningService = new ElearningServiceImpl();
-
-    @Override
-    protected Menu createInstance() {
-        return new InstructorMenu();
-    }
+    private static ElearningService elearningService = new ElearningServiceImpl();   
 
     @Override
     public void show() throws DAOException {

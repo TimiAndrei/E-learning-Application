@@ -16,12 +16,6 @@ public class StudentMenu extends Menu {
 
     private static Scanner scanner = new Scanner(System.in);
     private static ElearningService elearningService = new ElearningServiceImpl();
-    private static User loggedInUser = LoginMenu.getLoggedInUser();
-
-    @Override
-    protected Menu createInstance() {
-        return new StudentMenu();
-    }
 
     @Override
     public void show() throws DAOException {
@@ -58,7 +52,7 @@ public class StudentMenu extends Menu {
                     viewQuizzes();
                     break;
                 case 7:
-                    loggedInUser = null;
+                    Menu.setLoggedInUser(null);
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -101,7 +95,7 @@ public class StudentMenu extends Menu {
         int courseId = scanner.nextInt();
         scanner.nextLine();
         application.setCourseId(courseId);
-        application.setUserId(loggedInUser.getId());
+        application.setUserId(Menu.getLoggedInUser().getId());
         application.setStatus("PENDING");
         System.out.println("Enter application letter message: ");
         String message = scanner.nextLine();
@@ -122,7 +116,7 @@ public class StudentMenu extends Menu {
         System.out.println("For what course do you want to take the quiz?");
         try {
             System.out.println("Your Courses:");
-            List<Course> courses = elearningService.getUserCourses(loggedInUser.getId());
+            List<Course> courses = elearningService.getUserCourses(Menu.getLoggedInUser().getId());
             for (Course course : courses) {
                 System.out.println(course);
             }
@@ -146,12 +140,12 @@ public class StudentMenu extends Menu {
         int quizId = scanner.nextInt();
         scanner.nextLine();
         System.out.println("Taking the quiz...");
-        System.out.println("Good luck " + loggedInUser.getUsername() + "!");
+        System.out.println("Good luck " + Menu.getLoggedInUser().getUsername() + "!");
         System.out.println("Timer starts now!");
         LocalDateTime startTime = LocalDateTime.now();
         Quiz quiz = elearningService.getQuizById(quizId);
         quizAttempt.setQuizId(quizId);
-        quizAttempt.setUserId(loggedInUser.getId());
+        quizAttempt.setUserId(Menu.getLoggedInUser().getId());
 
         List<Question> questionsAttempted = new ArrayList<>();
         System.out.println("Answer the following questions with the number of the answer you think is correct: ");        
@@ -193,9 +187,9 @@ public class StudentMenu extends Menu {
     private static void viewUserQuizAttempts() {
         System.out.println("Your Quiz Attempts:");
         try {
-            List<QuizAttempt> quizAttempts = elearningService.getUserQuizAttempts(loggedInUser.getId());
+            List<QuizAttempt> quizAttempts = elearningService.getUserQuizAttempts(Menu.getLoggedInUser().getId());
             for (QuizAttempt quizAttempt : quizAttempts) {
-                System.out.println(quizAttempt);
+                System.out.println(quizAttempt.showPreview());
             }
         } catch (DAOException e) {
             System.out.println("Error getting quiz attempts: " + e.getMessage());
@@ -219,7 +213,7 @@ public class StudentMenu extends Menu {
         try {
             List<Quiz> quizzes = elearningService.getAllQuizzes();
             for (Quiz quiz : quizzes) {
-                System.out.println(quiz);
+                System.out.println(quiz.showPreview());
             }
         } catch (DAOException e) {
             System.out.println("Error getting quizzes: " + e.getMessage());

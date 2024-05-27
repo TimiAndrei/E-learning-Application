@@ -10,13 +10,7 @@ import com.timi.model.*;
 public class AdminMenu extends Menu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static ElearningService elearningService = new ElearningServiceImpl();
-    private static User loggedInUser = null;
-
-    @Override
-    protected Menu createInstance() {
-        return new AdminMenu();
-    }
+    private static ElearningService elearningService = new ElearningServiceImpl();    
 
     @Override
     public void show() throws DAOException, InvalidEmailException {
@@ -41,7 +35,7 @@ public class AdminMenu extends Menu {
                     deleteUser();
                     break;
                 case 4:
-                    loggedInUser = null;
+                    Menu.setLoggedInUser(null);;
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -90,7 +84,7 @@ public class AdminMenu extends Menu {
             return;
         }
 
-        if (userId == loggedInUser.getId() && !role.equals(loggedInUser.getRole())) {
+        if (userId == Menu.getLoggedInUser().getId() && !role.equals(Menu.getLoggedInUser().getRole())) {
             System.out.println("You cannot change your own role. Please try again.");
             return;
         }

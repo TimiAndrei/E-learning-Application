@@ -10,12 +10,6 @@ public class LoginMenu extends Menu{
 
     private static Scanner scanner = new Scanner(System.in);
     private static ElearningService elearningService = new ElearningServiceImpl();
-    private static User loggedInUser = null;
-
-    @Override
-    protected Menu createInstance() {
-        return new LoginMenu();
-    }
 
     @Override
     public void show() throws DAOException {
@@ -66,8 +60,9 @@ public class LoginMenu extends Menu{
         String password = scanner.nextLine();
 
         try {
-            loggedInUser = elearningService.authenticateUser(email, password);
+            User loggedInUser = elearningService.authenticateUser(email, password);
             if (loggedInUser != null) {
+                Menu.setLoggedInUser(loggedInUser);
                 System.out.println("Login successful. Welcome, " + loggedInUser.getUsername());
             } else {
                 System.out.println("Invalid email or password. Please try again.");
@@ -77,8 +72,5 @@ public class LoginMenu extends Menu{
         }
     }
 
-    public static User getLoggedInUser() {
-        return loggedInUser;
-    }
 
 }

@@ -108,6 +108,12 @@ public class QuizAttempt {
                 + durationAttempted + "]";
     }
 
+    public String showPreview(){
+        return "QuizAttempt [attemptId=" + attemptId + ", userId=" + userId + ", quizId=" + quizId + ", timestamp="
+                + timestamp + ", score=" + score + ", durationAttempted="
+                + durationAttempted + "]";
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

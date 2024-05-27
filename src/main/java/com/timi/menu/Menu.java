@@ -7,13 +7,29 @@ import com.timi.model.User;
 public class Menu {
 
     private static User loggedInUser = null;
+    private static Menu instance;
     private static Menu loginMenu = new LoginMenu();
     private static Menu adminMenu = new AdminMenu();
     private static Menu instructorMenu = new InstructorMenu();
     private static Menu studentMenu = new StudentMenu();
     
-    protected Menu createInstance() {
-        return new Menu();
+    protected Menu (){
+
+    }
+
+    public static Menu getInstance() {
+        if (instance == null) {
+            instance = new Menu();
+        }
+        return instance;
+    }
+
+    public static void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
     }
 
     public void show() throws DAOException, InvalidEmailException {
@@ -31,8 +47,10 @@ public class Menu {
                     case "STUDENT":
                         studentMenu.show();
                         break;
+                    default:
+                        System.out.println("Unknown role. Please contact support.");
+                        loggedInUser = null;
                 }
-            
             }
         }
     }

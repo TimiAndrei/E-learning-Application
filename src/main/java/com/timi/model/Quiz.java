@@ -86,6 +86,10 @@ public class Quiz {
                 + "\nduration=" + duration + "]";
     }
 
+    public String showPreview(){
+        return "Quiz [quizId=" + quizId + ", title=" + title  + ", duration=" + duration + "]";
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
