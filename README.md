@@ -13,6 +13,7 @@ The project has many classes, interfaces and resources that are organized in pac
 - **Model:** Contains all the classes that represent the entities of the application.
 - **Service:** Contains all the classes that provide services to the application.
 - **Dao:** Contains all the classes that interact with the database.
+- **Menu:** Contains all the classes that display the menu options to the user.
 - **Exception:** Contains all the custom exception classes.
 - **Test:** Contains all the test classes, especially for the DAO classes.
 - **Resources:** Contains all the resources, such as the database configuration file and the SQL script to create the database.
@@ -103,7 +104,9 @@ All tests were successful and the application is working as expected.
 
 ### 8. Main Class 🚀
 
-The main class contains a demo of the application calling the service's methods. It loads the data from the database using the DataService and displays the data in the console.
+The main application class calls the menu which controls the services and the user interaction with the application. The menu is displayed to the user and the user can select the desired option to interact with the application.
+
+The project supports login and registration of users, course enrollment, quiz attempts, course completion and auditing of the actions performed by the users.
 
 ## Conclusion
 
