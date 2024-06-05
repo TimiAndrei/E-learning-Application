@@ -9,7 +9,7 @@ public class Student extends User {
     private List<Course> enrolledCourses;
 
     public Student(int id, String email, String username, String password, Level level, int points) {
-        super(id, email, username, password);
+        super(id, email, username, password, "STUDENT");
         this.level = level;
         this.points = points;
         this.enrolledCourses = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Student extends User {
     }
 
     public Student(int id, String email, String username, String password) {
-        super(id, email, username, password);
+        super(id, email, username, password, "STUDENT");
         this.level = Level.BEGINNER;
         this.points = 0;
         this.enrolledCourses = new ArrayList<>();

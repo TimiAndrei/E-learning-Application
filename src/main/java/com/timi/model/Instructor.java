@@ -10,7 +10,7 @@ public class Instructor extends User {
     private List<Course> teachingCourses;
 
     public Instructor(int id, String email, String username, String password, Date dateOfEmployment, String department) {
-        super(id, email, username, password);
+        super(id, email, username, password, "INSTRUCTOR");
         this.dateOfEmployment = dateOfEmployment;
         this.department = department;
         this.teachingCourses = new ArrayList<>();
@@ -24,7 +24,7 @@ public class Instructor extends User {
     }
 
     public Instructor(int id, String email, String username, String password) {
-        super(id, email, username, password);
+        super(id, email, username, password, "INSTRUCTOR");
         this.dateOfEmployment = new Date();
         this.department = "Unknown";
         this.teachingCourses = new ArrayList<>();

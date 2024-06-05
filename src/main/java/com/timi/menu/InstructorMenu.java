@@ -40,6 +40,7 @@ public class InstructorMenu extends Menu {
                     addQuestion();
                     break;
                 case 5:
+                    Menu.setLoggedInUser(null);
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
